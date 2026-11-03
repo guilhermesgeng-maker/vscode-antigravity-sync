@@ -1,0 +1,21 @@
+[
+  {
+    "key": "tab",
+    "command": "antigravity.prioritized.supercompleteAccept",
+    "when": "editorTextFocus && ((inlineSuggestionVisible && (inlineSuggestionHasIndentationLessThanTabSize || (vim.active && vim.mode == 'Normal') || (neovim.init && neovim.mode == 'normal'))) || antigravity.customCompletionShown)"
+  },
+  {
+    "key": "escape",
+    "command": "antigravity.prioritized.supercompleteEscape",
+    "when": "!(editorTextFocus && ((vim.active && vim.mode != 'Normal') || (neovim.init && neovim.mode != 'normal'))) && (antigravity.customCompletionShown || inlineSuggestionVisible) && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "antigravity.insertTerminalSnippet",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+u",
+    "command": "unifiedUsage.openDashboard"
+  }
+]

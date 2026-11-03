@@ -1,0 +1,21 @@
+{
+  "install": [
+    "google.google-antigravity",
+    "miguelsolorio.symbols",
+    "enkia.tokyo-night",
+    "robbowen.synthwave-vscode",
+    "golang.go",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "meta.pyrefly",
+    "shopify.ruby-lsp",
+    "ms-vscode-remote.remote-wsl",
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-containers"
+  ],
+  "uninstall": [
+    "jiajilah.agent-usage-monitor",
+    "narun-dev.antigravity-monitor",
+    "planken.agent-usage",
+    "crsx.ag-usage"
+  ]
+}

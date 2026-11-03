@@ -1,0 +1,20 @@
+{
+  "workbench.colorTheme": "Dark Modern",
+  "workbench.iconTheme": "symbols",
+  "workbench.productIconTheme": "Default",
+  "workbench.activityBar.location": "default",
+  "workbench.panel.defaultLocation": "bottom",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+  "workbench.editor.autoLockGroups": false,
+  "git.autofetch": true,
+  "python.languageServer": "Default",
+  "antigravity.enableInlineDiff": true,
+  "antigravity.autoAcceptOnChat": true,
+  "antigravity.autoOpenFiles": false,
+  "antigravity.enableComments": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.codeLens": true,
+  "chat.disableAIFeatures": true,
+  "unifiedUsage.autoSyncGitHub": true
+}
