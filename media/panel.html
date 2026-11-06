@@ -104,53 +104,20 @@
     color: #4ade80;
     border-color: rgba(74, 222, 128, 0.45);
   }
+  .lang-btn {
+    background: rgba(56, 189, 248, 0.12);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.35);
+    font-weight: 700;
+  }
+  .lang-btn:hover {
+    background: rgba(56, 189, 248, 0.22);
+    color: #7dd3fc;
+    border-color: rgba(56, 189, 248, 0.6);
+  }
 
   .view-pane { display: none; flex-direction: column; gap: 16px; }
   .view-pane.active { display: flex; }
-
-  /* Plan & Credits Top Row */
-  .plan-credits-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-  }
-  .ag-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .plan-pill-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 11px 16px;
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.15s ease;
-  }
-  .plan-pill-card:hover { border-color: rgba(255,255,255,0.25); }
-  .plan-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-secondary);
-  }
-  .plan-name {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-primary);
-  }
-  .credits-value {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--success);
-  }
 
   /* 3-Column Hero Showcase */
   .ag-showcase-container {
@@ -586,7 +553,7 @@
     margin-left: 6px;
   }
 
-  /* Mission Control & Analytics */
+  /* Token Control & Analytics */
   .seg-group {
     display: inline-flex;
     background: #202025;
@@ -660,16 +627,17 @@
 
   <div class="top-header">
     <div class="brand-title">
-      <h1>🚀 AG Usage & Monitor de IA Unificado</h1>
+      <h1 id="brandHeaderTitle">🚀 AG Usage & Monitor de IA Unificado</h1>
       <span class="sys-badge" id="sysInfo">Carregando...</span>
     </div>
     <div class="nav-tabs">
       <button class="nav-btn active" id="tabBtnAg" onclick="switchTab('ag-dashboard')">🚀 Painel AG Usage</button>
-      <button class="nav-btn" id="tabBtnMission" onclick="switchTab('mission')">⚡ Controle de Missão</button>
+      <button class="nav-btn" id="tabBtnMission" onclick="switchTab('mission')">⚡ Controle de Tokens</button>
       <button class="nav-btn" id="tabBtnAnalytics" onclick="switchTab('analytics')">📊 Gráficos e Exportação</button>
-      <button class="nav-btn" onclick="post('syncNow')" title="Baixar atualizações mais recentes da extensão e configurações do GitHub">☁ Sincronizar</button>
-      <button class="nav-btn" onclick="post('pushSync')" title="Enviar alterações locais e configurações para o GitHub">⬆ Enviar</button>
-      <button class="nav-btn" onclick="post('refresh')">↻ Atualizar</button>
+      <button class="nav-btn" id="btnSync" onclick="post('syncNow')" title="Baixar atualizações do GitHub">☁ Sincronizar</button>
+      <button class="nav-btn" id="btnPush" onclick="post('pushSync')" title="Enviar alterações locais para o GitHub">⬆ Enviar</button>
+      <button class="nav-btn" id="btnRefresh" onclick="post('refresh')">↻ Atualizar</button>
+      <button class="nav-btn lang-btn" id="langSwitchBtn" onclick="toggleLanguage()" title="Mudar Idioma / Switch Language">🌐 PT</button>
       <button class="nav-btn" onclick="post('openSettings')">⚙</button>
     </div>
   </div>
@@ -677,29 +645,26 @@
   <!-- ==================== TAB 1: PAINEL AG USAGE ==================== -->
   <div class="view-pane active" id="paneAgDashboard">
 
-    <!-- Linha Superior de Planos e Créditos -->
-    <div class="plan-credits-row" id="planCreditsRow"></div>
-
     <!-- 3 Colunas Hero Showcase (SAÚDE DOS SERVIÇOS | SPARKLINE | MAPA DE ATIVIDADE) -->
     <div class="ag-showcase-container">
 
       <!-- Coluna 1: SAÚDE DOS SERVIÇOS -->
       <div class="showcase-card">
         <div class="showcase-header">
-          <span class="showcase-title">SAÚDE DOS SERVIÇOS</span>
+          <span class="showcase-title" id="lblServiceHealth">SAÚDE DOS SERVIÇOS</span>
           <span style="font-size:10px;color:#9ca3af;">24h</span>
         </div>
         <div class="showcase-inner-box">
           <a class="public-status-link" href="https://statusgator.com/services/google-antigravity" target="_blank">
-            <span>STATUS PÚBLICO</span>
+            <span id="lblPublicStatus">STATUS PÚBLICO</span>
             <span>→</span>
           </a>
           <div class="health-svg-wrap" id="serviceHealthSvg"></div>
         </div>
         <div class="health-legend">
-          <span><i class="h-dot h-up"></i>Serviço ativo</span>
-          <span><i class="h-dot h-warn"></i>Possível instabilidade</span>
-          <span><i class="h-dot h-down"></i>Instabilidade provável</span>
+          <span><i class="h-dot h-up"></i><span id="lblServiceUp">Serviço ativo</span></span>
+          <span><i class="h-dot h-warn"></i><span id="lblPossibleOutage">Possível instabilidade</span></span>
+          <span><i class="h-dot h-down"></i><span id="lblLikelyOutage">Instabilidade provável</span></span>
         </div>
       </div>
 
@@ -727,7 +692,7 @@
       <!-- Coluna 3: ATIVIDADE DE USO -->
       <div class="showcase-card">
         <div class="showcase-header">
-          <span class="showcase-title">ATIVIDADE DE USO</span>
+          <span class="showcase-title" id="lblUsageActivity">ATIVIDADE DE USO</span>
           <div class="heatmap-nav">
             <button class="hm-arrow" onclick="changeMonth(-1)">‹</button>
             <span class="hm-month-label" id="hmMonthTitle">NOV 2026</span>
@@ -736,13 +701,13 @@
         </div>
         <div class="hm-calendar-wrap" id="heatmapCalendarWrap"></div>
         <div class="hm-legend-bottom">
-          <span>Menos</span>
+          <span id="lblLess">Menos</span>
           <i class="hm-legend-sq" style="background:#26262c"></i>
           <i class="hm-legend-sq" style="background:#1f4d33"></i>
           <i class="hm-legend-sq" style="background:#266f46"></i>
           <i class="hm-legend-sq" style="background:#34a861"></i>
           <i class="hm-legend-sq" style="background:#4ade80"></i>
-          <span>Mais</span>
+          <span id="lblMore">Mais</span>
         </div>
       </div>
 
@@ -759,15 +724,15 @@
 
   </div>
 
-  <!-- ==================== TAB 2: CONTROLE DE MISSÃO ==================== -->
+  <!-- ==================== TAB 2: CONTROLE DE TOKENS ==================== -->
   <div class="view-pane" id="paneMission">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <span class="showcase-title">TELEMETRIA DE TOKENS & DETALHAMENTO DO WORKSPACE</span>
+      <span class="showcase-title" id="lblTokenTelemetry">TELEMETRIA & CONTROLE DE TOKENS</span>
       <div class="seg-group">
-        <button class="seg-btn" data-win="day" onclick="setWindow('day')">24h</button>
-        <button class="seg-btn" data-win="week" onclick="setWindow('week')">7 Dias</button>
-        <button class="seg-btn" data-win="month" onclick="setWindow('month')">30 Dias</button>
-        <button class="seg-btn active" data-win="all" onclick="setWindow('all')">Tudo (90d)</button>
+        <button class="seg-btn" id="btnWinDay" data-win="day" onclick="setWindow('day')">24h</button>
+        <button class="seg-btn" id="btnWinWeek" data-win="week" onclick="setWindow('week')">7 Dias</button>
+        <button class="seg-btn" id="btnWinMonth" data-win="month" onclick="setWindow('month')">30 Dias</button>
+        <button class="seg-btn active" id="btnWinAll" data-win="all" onclick="setWindow('all')">Tudo (90d)</button>
       </div>
     </div>
 
@@ -775,7 +740,7 @@
 
     <div class="showcase-card" style="min-height:auto;">
       <div class="showcase-header">
-        <span class="showcase-title">ATIVIDADE DIÁRIA DE TOKENS EM 30 DIAS (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)</span>
+        <span class="showcase-title" id="lblDailyTokensTitle">ATIVIDADE DIÁRIA DE TOKENS EM 30 DIAS (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)</span>
         <span class="q-models-tag" id="dailyPeakLabel">Pico: 0</span>
       </div>
       <div id="dailySvgContainer" style="width:100%;height:120px;"></div>
@@ -794,22 +759,22 @@
       </div>
       <div>
         <select id="analyticsSource" onchange="renderAnalytics()">
-          <option value="all">Todos os Agentes (Antigravity + Codex + Claude)</option>
-          <option value="antigravity">Antigravity & Gemini / Argon</option>
-          <option value="codex">OpenAI Codex / Astra / Luna</option>
-          <option value="claude">Claude Code</option>
+          <option value="all" id="optSrcAll">Todos os Agentes (Antigravity + Codex + Claude)</option>
+          <option value="antigravity" id="optSrcAg">Antigravity & Gemini / Argon</option>
+          <option value="codex" id="optSrcCx">OpenAI Codex / Astra / Luna</option>
+          <option value="claude" id="optSrcCl">Claude Code</option>
         </select>
       </div>
       <div>
         <select id="analyticsChartType" onchange="renderAnalytics()">
-          <option value="bar">Gráfico de Barras</option>
-          <option value="doughnut">Gráfico de Rosca / Pizza</option>
+          <option value="bar" id="optChartBar">Gráfico de Barras</option>
+          <option value="doughnut" id="optChartPie">Gráfico de Rosca / Pizza</option>
         </select>
       </div>
       <div>
         <input type="date" id="dateStart" onchange="renderAnalytics()">
         <input type="date" id="dateEnd" onchange="renderAnalytics()">
-        <button class="nav-btn" onclick="resetDates()">Redefinir</button>
+        <button class="nav-btn" id="btnResetDates" onclick="resetDates()">Redefinir</button>
       </div>
       <div style="margin-left:auto;display:flex;gap:6px;">
         <button class="nav-btn" onclick="exportChartPNG()">📥 PNG</button>
@@ -821,7 +786,7 @@
     <div class="summary-tiles" id="analyticsTiles"></div>
     <div class="chart-box"><canvas id="analyticsCanvas"></canvas></div>
     <div class="showcase-card" style="min-height:auto;">
-      <div class="showcase-header"><span class="showcase-title">DETALHAMENTO DETALHADO</span></div>
+      <div class="showcase-header"><span class="showcase-title" id="lblDetailedBreakdown">DETALHAMENTO DETALHADO</span></div>
       <div id="analyticsTableWrap"></div>
     </div>
   </div>
@@ -837,10 +802,232 @@
   let analyticsMode = 'model';
   let chartInstance = null;
 
-  // Persist current active tab across refreshes
+  const I18N = {
+    'pt-BR': {
+      title: '🚀 AG Usage & Monitor de IA Unificado',
+      tabAg: '🚀 Painel AG Usage',
+      tabTokens: '⚡ Controle de Tokens',
+      tabAnalytics: '📊 Gráficos e Exportação',
+      sync: '☁ Sincronizar',
+      syncTitle: 'Baixar atualizações do GitHub',
+      push: '⬆ Enviar',
+      pushTitle: 'Enviar alterações locais para o GitHub',
+      refresh: '↻ Atualizar',
+      loading: 'Carregando...',
+      serviceHealth: 'SAÚDE DOS SERVIÇOS',
+      publicStatus: 'STATUS PÚBLICO',
+      serviceUp: 'Serviço ativo',
+      possibleOutage: 'Possível instabilidade',
+      likelyOutage: 'Instabilidade provável',
+      expand: 'EXPANDIR',
+      collapse: 'RECOLHER',
+      steady: 'Estável',
+      usageActivity: 'ATIVIDADE DE USO',
+      less: 'Menos',
+      more: 'Mais',
+      months: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
+      weekdays: ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+      daysFull: ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'],
+      turns: 'turnos',
+      noActivityDate: 'Nenhuma atividade registrada',
+      notApplicable: 'Não aplicável',
+      weekly: 'Semanal',
+      active: 'Ativo',
+      soon: 'Em breve',
+      modelSingular: 'modelo',
+      modelPlural: 'modelos',
+      resetTimeline: 'LINHA DO TEMPO DE REINÍCIO',
+      window7d: 'Janela de 7 Dias',
+      resetsIn: 'reinicia em',
+      inPrefix: 'em',
+      mostUsedModels: 'MODELOS MAIS UTILIZADOS',
+      tokenTelemetry: 'TELEMETRIA & CONTROLE DE TOKENS',
+      btn24h: '24h',
+      btn7d: '7 Dias',
+      btn30d: '30 Dias',
+      btnAll: 'Tudo (90d)',
+      combinedTotalTokens: 'Total Combinado de Tokens',
+      modelTurns: 'turnos de modelos',
+      activeWorkspaces: 'workspaces ativos',
+      sessions: 'sessões',
+      claudeReady: 'Pronto para logs de ~/.claude',
+      dailyActivity30d: 'ATIVIDADE DIÁRIA DE TOKENS EM 30 DIAS (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)',
+      peakDay: 'Pico Diário',
+      modelCol: 'Modelo',
+      inputCacheCol: 'Entrada+Cache',
+      outputCol: 'Saída',
+      totalCol: 'Total',
+      noActivityWindow: 'Nenhuma atividade nesta janela',
+      topWorkspaces: 'PRINCIPAIS WORKSPACES',
+      workspaceCol: 'Workspace',
+      noWorkspaces: 'Nenhum workspace',
+      byModel: 'Por Modelo',
+      byToken: 'Por Token & Requisição',
+      byProject: 'Por Workspace',
+      allAgentsOpt: 'Todos os Agentes (Antigravity + Codex + Claude)',
+      agOpt: 'Antigravity & Gemini / Argon',
+      codexOpt: 'OpenAI Codex / Astra / Luna',
+      claudeOpt: 'Claude Code',
+      barChartOpt: 'Gráfico de Barras',
+      doughnutOpt: 'Gráfico de Rosca / Pizza',
+      resetDatesBtn: 'Redefinir',
+      inputCacheTokens: 'Tokens de Entrada + Cache',
+      outputTokens: 'Tokens de Saída',
+      combinedTotal: 'Total Combinado',
+      totalTurns: 'Total de Turnos',
+      detailedBreakdown: 'DETALHAMENTO DETALHADO',
+      metricCol: 'Métrica',
+      valueCol: 'Valor',
+      totalTokens: 'Total de Tokens',
+      totalWorkspaceTokens: 'Total de Tokens por Workspace',
+      langBtn: '🌐 PT'
+    },
+    'en': {
+      title: '🚀 AG Usage & Unified AI Monitor',
+      tabAg: '🚀 AG Usage Dashboard',
+      tabTokens: '⚡ Token Control',
+      tabAnalytics: '📊 Charts & Export',
+      sync: '☁ Sync',
+      syncTitle: 'Pull latest updates from GitHub',
+      push: '⬆ Push',
+      pushTitle: 'Push local changes to GitHub',
+      refresh: '↻ Refresh',
+      loading: 'Loading...',
+      serviceHealth: 'SERVICE HEALTH',
+      publicStatus: 'PUBLIC STATUS',
+      serviceUp: 'Service up',
+      possibleOutage: 'Possible outage',
+      likelyOutage: 'Likely outage',
+      expand: 'EXPAND',
+      collapse: 'COLLAPSE',
+      steady: 'Steady',
+      usageActivity: 'USAGE ACTIVITY',
+      less: 'Less',
+      more: 'More',
+      months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      weekdays: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      daysFull: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
+      turns: 'turns',
+      noActivityDate: 'No recorded activity',
+      notApplicable: 'Not applicable',
+      weekly: 'Weekly',
+      active: 'Active',
+      soon: 'Soon',
+      modelSingular: 'model',
+      modelPlural: 'models',
+      resetTimeline: 'RESET TIMELINE',
+      window7d: '7-Day Window',
+      resetsIn: 'resets in',
+      inPrefix: 'in',
+      mostUsedModels: 'MOST USED MODELS',
+      tokenTelemetry: 'TOKEN TELEMETRY & CONTROL',
+      btn24h: '24h',
+      btn7d: '7 Days',
+      btn30d: '30 Days',
+      btnAll: 'All (90d)',
+      combinedTotalTokens: 'Combined Total Tokens',
+      modelTurns: 'model turns',
+      activeWorkspaces: 'active workspaces',
+      sessions: 'sessions',
+      claudeReady: 'Ready for ~/.claude logs',
+      dailyActivity30d: '30-DAY DAILY TOKEN ACTIVITY (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)',
+      peakDay: 'Peak Day',
+      modelCol: 'Model',
+      inputCacheCol: 'Input+Cache',
+      outputCol: 'Output',
+      totalCol: 'Total',
+      noActivityWindow: 'No activity in this window',
+      topWorkspaces: 'TOP WORKSPACES',
+      workspaceCol: 'Workspace',
+      noWorkspaces: 'No workspaces',
+      byModel: 'By Model',
+      byToken: 'By Token & Query',
+      byProject: 'By Workspace',
+      allAgentsOpt: 'All Agents (Antigravity + Codex + Claude)',
+      agOpt: 'Antigravity & Gemini / Argon',
+      codexOpt: 'OpenAI Codex / Astra / Luna',
+      claudeOpt: 'Claude Code',
+      barChartOpt: 'Bar Chart',
+      doughnutOpt: 'Doughnut / Pie Chart',
+      resetDatesBtn: 'Reset',
+      inputCacheTokens: 'Input + Cache Tokens',
+      outputTokens: 'Output Tokens',
+      combinedTotal: 'Combined Total',
+      totalTurns: 'Total Turns',
+      detailedBreakdown: 'DETAILED BREAKDOWN',
+      metricCol: 'Metric',
+      valueCol: 'Value',
+      totalTokens: 'Total Tokens',
+      totalWorkspaceTokens: 'Total Workspace Tokens',
+      langBtn: '🌐 EN'
+    }
+  };
+
   const previousState = vscode.getState() || {};
   let currentTab = previousState.currentTab || 'ag-dashboard';
+  let currentLang = previousState.currentLang || 'pt-BR';
   let hasInitializedTab = false;
+
+  function t() {
+    return I18N[currentLang] || I18N['pt-BR'];
+  }
+
+  function applyLanguage() {
+    const tr = t();
+    document.title = tr.title;
+    document.getElementById('brandHeaderTitle').textContent = tr.title;
+    document.getElementById('tabBtnAg').textContent = tr.tabAg;
+    document.getElementById('tabBtnMission').textContent = tr.tabTokens;
+    document.getElementById('tabBtnAnalytics').textContent = tr.tabAnalytics;
+    document.getElementById('btnSync').textContent = tr.sync;
+    document.getElementById('btnSync').title = tr.syncTitle;
+    document.getElementById('btnPush').textContent = tr.push;
+    document.getElementById('btnPush').title = tr.pushTitle;
+    document.getElementById('btnRefresh').textContent = tr.refresh;
+    document.getElementById('langSwitchBtn').textContent = tr.langBtn;
+
+    document.getElementById('lblServiceHealth').textContent = tr.serviceHealth;
+    document.getElementById('lblPublicStatus').textContent = tr.publicStatus;
+    document.getElementById('lblServiceUp').textContent = tr.serviceUp;
+    document.getElementById('lblPossibleOutage').textContent = tr.possibleOutage;
+    document.getElementById('lblLikelyOutage').textContent = tr.likelyOutage;
+    document.getElementById('lblUsageActivity').textContent = tr.usageActivity;
+    document.getElementById('lblLess').textContent = tr.less;
+    document.getElementById('lblMore').textContent = tr.more;
+    document.getElementById('sparkExpandLabel').textContent = sparkHistoryOpen ? tr.collapse : tr.expand;
+
+    document.getElementById('lblTokenTelemetry').textContent = tr.tokenTelemetry;
+    document.getElementById('btnWinDay').textContent = tr.btn24h;
+    document.getElementById('btnWinWeek').textContent = tr.btn7d;
+    document.getElementById('btnWinMonth').textContent = tr.btn30d;
+    document.getElementById('btnWinAll').textContent = tr.btnAll;
+    document.getElementById('lblDailyTokensTitle').textContent = tr.dailyActivity30d;
+
+    document.getElementById('subTabModel').textContent = tr.byModel;
+    document.getElementById('subTabToken').textContent = tr.byToken;
+    document.getElementById('subTabProject').textContent = tr.byProject;
+    document.getElementById('optSrcAll').textContent = tr.allAgentsOpt;
+    document.getElementById('optSrcAg').textContent = tr.agOpt;
+    document.getElementById('optSrcCx').textContent = tr.codexOpt;
+    document.getElementById('optSrcCl').textContent = tr.claudeOpt;
+    document.getElementById('optChartBar').textContent = tr.barChartOpt;
+    document.getElementById('optChartPie').textContent = tr.doughnutOpt;
+    document.getElementById('btnResetDates').textContent = tr.resetDatesBtn;
+    document.getElementById('lblDetailedBreakdown').textContent = tr.detailedBreakdown;
+
+    if (currentData) {
+      renderAgDashboard();
+      renderMissionControl();
+      if (currentTab === 'analytics') renderAnalytics();
+    }
+  }
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'pt-BR' ? 'en' : 'pt-BR';
+    vscode.setState({ ...vscode.getState(), currentLang, currentTab });
+    post('setLanguage', { language: currentLang });
+    applyLanguage();
+  }
 
   function post(type, extra = {}) {
     vscode.postMessage({ type, ...extra });
@@ -885,7 +1072,7 @@
 
   function switchTab(tab, notifyHost = true) {
     currentTab = tab;
-    vscode.setState({ ...vscode.getState(), currentTab: tab });
+    vscode.setState({ ...vscode.getState(), currentTab: tab, currentLang });
 
     document.getElementById('tabBtnAg').classList.toggle('active', tab === 'ag-dashboard');
     document.getElementById('tabBtnMission').classList.toggle('active', tab === 'mission');
@@ -915,7 +1102,7 @@
   function toggleSparkHistory() {
     sparkHistoryOpen = !sparkHistoryOpen;
     document.getElementById('sparkHistoryDrawer').classList.toggle('open', sparkHistoryOpen);
-    document.getElementById('sparkExpandLabel').textContent = sparkHistoryOpen ? 'RECOLHER' : 'EXPANDIR';
+    document.getElementById('sparkExpandLabel').textContent = sparkHistoryOpen ? t().collapse : t().expand;
     document.getElementById('sparkExpandIcon').textContent = sparkHistoryOpen ? '∧' : '∨';
   }
 
@@ -934,34 +1121,6 @@
     document.getElementById('sysInfo').textContent =
       `${d.userEmail || 'Local'} · ${d.hostname || 'Host'}`;
 
-    const agPlan = d.live?.antigravity?.ok ? (d.live.antigravity.value?.plan || 'Google AI Pro') : 'Google AI Pro';
-    const cxPlan = String(d.codex?.plan || 'Plus').toUpperCase();
-    const credits = d.credits ?? 50;
-
-    document.getElementById('planCreditsRow').innerHTML = `
-      <a class="ag-card plan-pill-card" href="https://antigravity.google/docs/plans" target="_blank">
-        <div>
-          <div class="plan-label">Plano Antigravity & Gemini</div>
-          <div class="plan-name">${agPlan}</div>
-        </div>
-        <span style="color:#4ade80;font-size:12px;font-weight:700;">Ativo →</span>
-      </a>
-      <div class="ag-card plan-pill-card">
-        <div>
-          <div class="plan-label">OpenAI Codex & Claude</div>
-          <div class="plan-name">CODEX ${cxPlan} · CLAUDE PRONTO</div>
-        </div>
-        <span style="color:#4ade80;font-size:12px;font-weight:700;">Conectado</span>
-      </div>
-      <div class="ag-card plan-pill-card">
-        <div>
-          <div class="plan-label">Créditos Extras</div>
-          <div class="plan-name">Saldo Disponível</div>
-        </div>
-        <span class="credits-value">${credits.toLocaleString()}</span>
-      </div>
-    `;
-
     renderServiceHealthBox();
     renderSparklineBox();
     renderHeatmapBox();
@@ -971,6 +1130,7 @@
   }
 
   function renderServiceHealthBox() {
+    const tr = t();
     let pts = currentData?.publicHealth?.healthPoints || [];
     if (!pts || pts.length === 0) {
       const sampleHeights = [22,14,28,16,58,15,18,24,14,32,20,66,18,14,22,26,74,16,14,25,30,18,62,19,16,32,18,22];
@@ -998,7 +1158,7 @@
       const x = i * (barW + barGap);
       const y = h - bh;
       const color = p.status === 2 ? '#ef4444' : p.status === 1 ? '#f59e0b' : '#4ade80';
-      const statusTxt = p.status === 2 ? 'Instabilidade provável' : p.status === 1 ? 'Possível instabilidade' : 'Serviço ativo';
+      const statusTxt = p.status === 2 ? tr.likelyOutage : p.status === 1 ? tr.possibleOutage : tr.serviceUp;
       const timeStr = new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${color}">
         <title>${timeStr} — ${statusTxt}</title>
@@ -1010,6 +1170,7 @@
   }
 
   function renderSparklineBox() {
+    const tr = t();
     const hist = (currentData?.quotaHistory || []).filter(e => e.category === sparkCat);
     const pts = hist.length >= 2 ? hist.slice(-11) : [
       { currentQuota: 0.42, timestamp: Date.now() - 5 * 3600000 },
@@ -1077,7 +1238,7 @@
       const prev = Math.round((p.previousQuota ?? p.currentQuota) * 100);
       const cur = Math.round(p.currentQuota * 100);
       const delta = cur - prev;
-      const deltaStr = delta === 0 ? ' Estável' : (delta > 0 ? `+${delta}%` : `${delta}%`);
+      const deltaStr = delta === 0 ? ` ${tr.steady}` : (delta > 0 ? `+${delta}%` : `${delta}%`);
       const tStr = new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       return `<div class="hist-entry">
         <span style="color:#9ca3af">${tStr}</span>
@@ -1089,7 +1250,8 @@
   }
 
   function renderHeatmapBox() {
-    const monthNames = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+    const tr = t();
+    const monthNames = tr.months;
     document.getElementById('hmMonthTitle').textContent = `${monthNames[hmMonth]} ${hmYear}`;
 
     const dailyArr = currentData?.dailyActivity || [];
@@ -1098,16 +1260,13 @@
 
     const firstDay = new Date(hmYear, hmMonth, 1);
     const lastDay = new Date(hmYear, hmMonth + 1, 0);
-    const startOffset = (firstDay.getDay() + 6) % 7; // Segunda = 0
+    const startOffset = (firstDay.getDay() + 6) % 7;
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - startOffset);
 
     const todayIso = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
 
-    let rowsHtml = `<div class="hm-weekdays">
-      <div class="hm-wd">S</div><div class="hm-wd">T</div><div class="hm-wd">Q</div>
-      <div class="hm-wd">Q</div><div class="hm-wd">S</div><div class="hm-wd">S</div><div class="hm-wd">D</div>
-    </div>`;
+    let rowsHtml = `<div class="hm-weekdays">${tr.weekdays.map(w => `<div class="hm-wd">${w}</div>`).join('')}</div>`;
 
     for (let week = 0; week < 5; week++) {
       let cells = '';
@@ -1133,8 +1292,8 @@
         ].filter(Boolean).join(' ');
 
         const tip = tok > 0
-          ? `${iso}: ${fmt(tok)} tokens (${info.requests || 0} turnos)`
-          : `${iso}: Nenhuma atividade registrada`;
+          ? `${iso}: ${fmt(tok)} tokens (${info.requests || 0} ${tr.turns})`
+          : `${iso}: ${tr.noActivityDate}`;
         cells += `<div class="${cls}" title="${tip}"></div>`;
       }
       rowsHtml += `<div class="hm-week-row">${cells}</div>`;
@@ -1144,6 +1303,7 @@
   }
 
   function renderQuotaCardsGrid() {
+    const tr = t();
     const groups = currentData?.agGroups || {};
     const order = ['Gemini', 'Argon', 'Codex', 'Claude'];
 
@@ -1169,7 +1329,7 @@
               <span class="q-pct-big" style="color:#9ca3af;font-size:18px;">—</span>
               <div class="q-meta-right">
                 <span class="q-win-label">5h</span>
-                <span class="q-reset-str">Não aplicável</span>
+                <span class="q-reset-str">${tr.notApplicable}</span>
               </div>
             </div>
             <div class="q-bar-track">
@@ -1183,9 +1343,9 @@
         const pct = Math.round(Math.max(0, Math.min(1, b.quota ?? 1)) * 100);
         const color = pctColor(pct);
         const isWk = String(b.window || '').toLowerCase() === 'weekly';
-        const winLbl = isWk ? 'Semanal' : '5h';
+        const winLbl = isWk ? tr.weekly : '5h';
         const diff = (b.resetTime || 0) - Date.now();
-        const relStr = diff > 0 ? fmtRelMs(diff) : 'Ativo';
+        const relStr = diff > 0 ? fmtRelMs(diff) : tr.active;
         const absStr = diff > 0 ? fmtAbsTime(b.resetTime, diff) : '';
 
         return `
@@ -1208,7 +1368,7 @@
         <div class="q-card">
           <div class="q-card-header">
             <span class="q-card-title">${cat}</span>
-            <span class="q-models-tag" title="${modelsTip}">${modelsCount} modelo${modelsCount === 1 ? '' : 's'}</span>
+            <span class="q-models-tag" title="${modelsTip}">${modelsCount} ${modelsCount === 1 ? tr.modelSingular : tr.modelPlural}</span>
           </div>
           ${bucketsHtml}
         </div>
@@ -1219,12 +1379,13 @@
   }
 
   function renderResetTimeline() {
+    const tr = t();
     const groups = currentData?.agGroups || {};
     const now = Date.now();
     const colors = { Gemini: '#38bdf8', Argon: '#818cf8', Codex: '#4ade80', Claude: '#fbbf24' };
 
     const dayHeaders = [];
-    const dayNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+    const dayNames = tr.daysFull;
     for (let i = 0; i < 7; i++) {
       const dt = new Date(now + i * 86400000);
       dayHeaders.push(`
@@ -1246,18 +1407,18 @@
 
     const dotsHtml = events.map((e, idx) => {
       const rel = fmtRelMs(Math.max(0, e.rTime - now));
-      return `<div class="tl-dot" style="left:${(e.posPct + idx * 2.5).toFixed(1)}%;background:${e.color}" title="${e.cat} reinicia em ${rel}"></div>`;
+      return `<div class="tl-dot" style="left:${(e.posPct + idx * 2.5).toFixed(1)}%;background:${e.color}" title="${e.cat} ${tr.resetsIn} ${rel}"></div>`;
     }).join('');
 
     const legendHtml = events.map((e) => {
       const rel = fmtRelMs(Math.max(0, e.rTime - now));
-      return `<span style="color:${e.color};font-weight:700;">● ${e.cat} <span style="color:#9ca3af;font-weight:500;">(em ${rel})</span></span>`;
+      return `<span style="color:${e.color};font-weight:700;">● ${e.cat} <span style="color:#9ca3af;font-weight:500;">(${tr.inPrefix} ${rel})</span></span>`;
     }).join('');
 
     document.getElementById('resetTimelineCard').innerHTML = `
       <div class="showcase-header">
-        <span class="showcase-title">LINHA DO TEMPO DE REINÍCIO</span>
-        <span style="font-size:11px;color:#9ca3af;">Janela de 7 Dias</span>
+        <span class="showcase-title">${tr.resetTimeline}</span>
+        <span style="font-size:11px;color:#9ca3af;">${tr.window7d}</span>
       </div>
       <div class="timeline-days">${dayHeaders.join('')}</div>
       <div class="tl-track">
@@ -1269,6 +1430,7 @@
   }
 
   function renderMostUsedModels() {
+    const tr = t();
     const d = currentData;
     const allModels = [
       ...(d.antigravity?.windows?.all?.byModel || []).map(m => ({ ...m, family: m.name.includes('argon') ? 'Argon' : 'Gemini', color: m.name.includes('argon') ? '#818cf8' : '#38bdf8' })),
@@ -1277,7 +1439,7 @@
     ].sort((a, b) => b.total - a.total);
 
     if (!allModels.some(m => m.family === 'Claude')) {
-      allModels.push({ name: 'claude-sonnet-5.5', total: 0, requests: 0, family: 'Claude Pronto', color: '#fbbf24' });
+      allModels.push({ name: 'claude-sonnet-5.5', total: 0, requests: 0, family: 'Claude', color: '#fbbf24' });
     }
 
     const grandTot = Math.max(1, allModels.reduce((s, m) => s + (m.total || 0), 0));
@@ -1293,7 +1455,7 @@
               <span class="model-pill-badge">${m.family}</span>
             </div>
             <span class="mono" style="font-size:12px;font-weight:700;">
-              ${fmt(m.total)} <span style="color:#9ca3af;font-weight:500;">(${m.requests || 0} turnos · ${share}%)</span>
+              ${fmt(m.total)} <span style="color:#9ca3af;font-weight:500;">(${m.requests || 0} ${tr.turns} · ${share}%)</span>
             </span>
           </div>
           <div class="q-bar-track" style="height:4px;">
@@ -1305,14 +1467,14 @@
 
     document.getElementById('mostUsedModelsCard').innerHTML = `
       <div class="showcase-header">
-        <span class="showcase-title">MODELOS MAIS UTILIZADOS</span>
-        <span style="font-size:11px;color:#9ca3af;">${totalTurns.toLocaleString()} turnos · ${fmt(grandTot)} tokens</span>
+        <span class="showcase-title">${tr.mostUsedModels}</span>
+        <span style="font-size:11px;color:#9ca3af;">${totalTurns.toLocaleString()} ${tr.turns} · ${fmt(grandTot)} tokens</span>
       </div>
       ${rowsHtml}
     `;
   }
 
-  /* ================= 2. CONTROLE DE MISSÃO DE TOKENS ================= */
+  /* ================= 2. CONTROLE DE TOKENS ================= */
   function setWindow(win) {
     currentWin = win;
     document.querySelectorAll('[data-win]').forEach(btn => {
@@ -1322,6 +1484,7 @@
   }
 
   function renderMissionControl() {
+    const tr = t();
     const d = currentData;
     if (!d) return;
 
@@ -1336,10 +1499,10 @@
     const totalRequests = (agW.totals?.requests || 0) + (cxW.totals?.requests || 0) + (clW.totals?.requests || 0);
 
     document.getElementById('summaryTiles').innerHTML = `
-      <div class="tile"><div class="tile-label">Total Combinado de Tokens</div><div class="tile-value">${fmt(grandTotal)}</div><div class="tile-sub">${totalRequests.toLocaleString()} turnos de modelos</div></div>
-      <div class="tile"><div class="tile-label">Antigravity & Gemini (Argon)</div><div class="tile-value" style="color:#38bdf8">${fmt(agTot)}</div><div class="tile-sub">${d.antigravity?.sessions || 0} workspaces ativos</div></div>
-      <div class="tile"><div class="tile-label">OpenAI Codex (Astra / Luna)</div><div class="tile-value" style="color:#4ade80">${fmt(cxTot)}</div><div class="tile-sub">${d.codex?.sessions || 0} sessões</div></div>
-      <div class="tile"><div class="tile-label">Claude Code</div><div class="tile-value" style="color:#fbbf24">${fmt(clTot)}</div><div class="tile-sub">${clTot > 0 ? (d.claude?.sessions + ' sessões') : 'Pronto para logs de ~/.claude'}</div></div>
+      <div class="tile"><div class="tile-label">${tr.combinedTotalTokens}</div><div class="tile-value">${fmt(grandTotal)}</div><div class="tile-sub">${totalRequests.toLocaleString()} ${tr.modelTurns}</div></div>
+      <div class="tile"><div class="tile-label">Antigravity & Gemini (Argon)</div><div class="tile-value" style="color:#38bdf8">${fmt(agTot)}</div><div class="tile-sub">${d.antigravity?.sessions || 0} ${tr.activeWorkspaces}</div></div>
+      <div class="tile"><div class="tile-label">OpenAI Codex (Astra / Luna)</div><div class="tile-value" style="color:#4ade80">${fmt(cxTot)}</div><div class="tile-sub">${d.codex?.sessions || 0} ${tr.sessions}</div></div>
+      <div class="tile"><div class="tile-label">Claude Code</div><div class="tile-value" style="color:#fbbf24">${fmt(clTot)}</div><div class="tile-sub">${clTot > 0 ? (d.claude?.sessions + ' ' + tr.sessions) : tr.claudeReady}</div></div>
     `;
 
     const agMap = new Map((d.antigravity?.windows?.month?.byDay || []).map(x => [x.day, x.total]));
@@ -1356,7 +1519,7 @@
       const sum = (agMap.get(k) || 0) + (cxMap.get(k) || 0) + (clMap.get(k) || 0);
       if (sum > maxDay) maxDay = sum;
     }
-    document.getElementById('dailyPeakLabel').textContent = `Pico Diário: ${fmt(maxDay)}`;
+    document.getElementById('dailyPeakLabel').textContent = `${tr.peakDay}: ${fmt(maxDay)}`;
 
     const barW = 100 / dayKeys.length;
     let rects = '';
@@ -1385,35 +1548,36 @@
   }
 
   function buildAgentCard(title, winData, color) {
+    const tr = t();
     const models = winData.byModel || [];
     const projects = (winData.byProject || []).slice(0, 8);
-    const t = winData.totals || {};
+    const tTot = winData.totals || {};
 
     return `<div class="showcase-card" style="min-height:auto;">
       <div class="showcase-header">
         <span class="showcase-title" style="color:${color}">${title}</span>
-        <span class="q-models-tag">${fmt(t.total || 0)} tokens</span>
+        <span class="q-models-tag">${fmt(tTot.total || 0)} tokens</span>
       </div>
       <table>
-        <thead><tr><th>Modelo</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>${tr.modelCol}</th><th class="num">${tr.inputCacheCol}</th><th class="num">${tr.outputCol}</th><th class="num">${tr.totalCol}</th></tr></thead>
         <tbody>
           ${models.length ? models.map(tk => `<tr>
             <td class="mono">${tk.name}</td>
             <td class="num">${fmt((tk.input || 0) + (tk.cacheRead || 0) + (tk.cacheWrite || 0))}</td>
             <td class="num">${fmt(tk.output || 0)}</td>
             <td class="num"><strong>${fmt(tk.total || 0)}</strong></td>
-          </tr>`).join('') : `<tr><td colspan="4" style="color:#9ca3af">Nenhuma atividade nesta janela</td></tr>`}
+          </tr>`).join('') : `<tr><td colspan="4" style="color:#9ca3af">${tr.noActivityWindow}</td></tr>`}
         </tbody>
       </table>
-      <div style="font-size:10px;font-weight:700;margin-top:12px;color:#9ca3af;">PRINCIPAIS WORKSPACES</div>
+      <div style="font-size:10px;font-weight:700;margin-top:12px;color:#9ca3af;">${tr.topWorkspaces}</div>
       <table>
-        <thead><tr><th>Workspace</th><th class="num">Turnos</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>${tr.workspaceCol}</th><th class="num">${tr.turns}</th><th class="num">${tr.totalCol}</th></tr></thead>
         <tbody>
           ${projects.length ? projects.map(p => `<tr>
             <td class="mono">${p.name}</td>
             <td class="num">${p.requests || 0}</td>
             <td class="num"><strong>${fmt(p.total || 0)}</strong></td>
-          </tr>`).join('') : `<tr><td colspan="3" style="color:#9ca3af">Nenhum workspace</td></tr>`}
+          </tr>`).join('') : `<tr><td colspan="3" style="color:#9ca3af">${tr.noWorkspaces}</td></tr>`}
         </tbody>
       </table>
     </div>`;
@@ -1451,6 +1615,7 @@
 
   function renderAnalytics() {
     if (!currentData) return;
+    const tr = t();
     const buckets = getFilteredBuckets();
     const chartType = document.getElementById('analyticsChartType').value;
 
@@ -1480,10 +1645,10 @@
     }
 
     document.getElementById('analyticsTiles').innerHTML = `
-      <div class="tile"><div class="tile-label">Tokens de Entrada + Cache</div><div class="tile-value">${fmt(totalIn)}</div></div>
-      <div class="tile"><div class="tile-label">Tokens de Saída</div><div class="tile-value" style="color:#38bdf8">${fmt(totalOut)}</div></div>
-      <div class="tile"><div class="tile-label">Total Combinado</div><div class="tile-value" style="color:#818cf8">${fmt(totalIn + totalOut)}</div></div>
-      <div class="tile"><div class="tile-label">Total de Turnos</div><div class="tile-value" style="color:#facc15">${totalTurns.toLocaleString()}</div></div>
+      <div class="tile"><div class="tile-label">${tr.inputCacheTokens}</div><div class="tile-value">${fmt(totalIn)}</div></div>
+      <div class="tile"><div class="tile-label">${tr.outputTokens}</div><div class="tile-value" style="color:#38bdf8">${fmt(totalOut)}</div></div>
+      <div class="tile"><div class="tile-label">${tr.combinedTotal}</div><div class="tile-value" style="color:#818cf8">${fmt(totalIn + totalOut)}</div></div>
+      <div class="tile"><div class="tile-label">${tr.totalTurns}</div><div class="tile-value" style="color:#facc15">${totalTurns.toLocaleString()}</div></div>
     `;
 
     const palette = ['#4ade80', '#38bdf8', '#818cf8', '#fbbf24', '#f87171', '#a78bfa'];
@@ -1497,27 +1662,27 @@
       const entries = Object.entries(byModel).sort((a, b) => b[1].total - a[1].total);
       labels = entries.map(e => e[0]);
       datasets = chartType === 'doughnut'
-        ? [{ label: 'Total de Tokens', data: entries.map(e => e[1].total), backgroundColor: palette }]
+        ? [{ label: tr.totalTokens, data: entries.map(e => e[1].total), backgroundColor: palette }]
         : [
-            { label: 'Entrada + Cache', data: entries.map(e => e[1].input), backgroundColor: '#38bdf8' },
-            { label: 'Saída', data: entries.map(e => e[1].output), backgroundColor: '#4ade80' }
+            { label: tr.inputCacheTokens, data: entries.map(e => e[1].input), backgroundColor: '#38bdf8' },
+            { label: tr.outputTokens, data: entries.map(e => e[1].output), backgroundColor: '#4ade80' }
           ];
-      tableHtml = `<table><thead><tr><th>Modelo</th><th class="num">Turnos</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead><tbody>` +
+      tableHtml = `<table><thead><tr><th>${tr.modelCol}</th><th class="num">${tr.turns}</th><th class="num">${tr.inputCacheCol}</th><th class="num">${tr.outputCol}</th><th class="num">${tr.totalCol}</th></tr></thead><tbody>` +
         entries.map(([k, v]) => `<tr><td class="mono">${k}</td><td class="num">${v.reqs}</td><td class="num">${v.input.toLocaleString()}</td><td class="num">${v.output.toLocaleString()}</td><td class="num"><strong>${v.total.toLocaleString()}</strong></td></tr>`).join('') +
         `</tbody></table>`;
     } else if (analyticsMode === 'token') {
-      labels = ['Tokens de Entrada + Cache', 'Tokens de Saída', 'Total Combinado'];
+      labels = [tr.inputCacheTokens, tr.outputTokens, tr.combinedTotal];
       datasets = [{ label: 'Tokens', data: [totalIn, totalOut, totalIn + totalOut], backgroundColor: ['#38bdf8', '#4ade80', '#818cf8'] }];
-      tableHtml = `<table><thead><tr><th>Métrica</th><th class="num">Valor</th></tr></thead><tbody>
-        <tr><td>Tokens de Entrada + Cache</td><td class="num">${totalIn.toLocaleString()}</td></tr>
-        <tr><td>Tokens de Saída</td><td class="num">${totalOut.toLocaleString()}</td></tr>
-        <tr><td>Total Combinado de Tokens</td><td class="num"><strong>${(totalIn + totalOut).toLocaleString()}</strong></td></tr>
+      tableHtml = `<table><thead><tr><th>${tr.metricCol}</th><th class="num">${tr.valueCol}</th></tr></thead><tbody>
+        <tr><td>${tr.inputCacheTokens}</td><td class="num">${totalIn.toLocaleString()}</td></tr>
+        <tr><td>${tr.outputTokens}</td><td class="num">${totalOut.toLocaleString()}</td></tr>
+        <tr><td>${tr.combinedTotal}</td><td class="num"><strong>${(totalIn + totalOut).toLocaleString()}</strong></td></tr>
       </tbody></table>`;
     } else {
       const entries = Object.entries(byProject).sort((a, b) => b[1].total - a[1].total);
       labels = entries.map(e => e[0]);
-      datasets = [{ label: 'Total de Tokens por Workspace', data: entries.map(e => e[1].total), backgroundColor: palette }];
-      tableHtml = `<table><thead><tr><th>Workspace</th><th class="num">Turnos</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead><tbody>` +
+      datasets = [{ label: tr.totalWorkspaceTokens, data: entries.map(e => e[1].total), backgroundColor: palette }];
+      tableHtml = `<table><thead><tr><th>${tr.workspaceCol}</th><th class="num">${tr.turns}</th><th class="num">${tr.inputCacheCol}</th><th class="num">${tr.outputCol}</th><th class="num">${tr.totalCol}</th></tr></thead><tbody>` +
         entries.map(([k, v]) => `<tr><td class="mono">${k}</td><td class="num">${v.reqs}</td><td class="num">${v.input.toLocaleString()}</td><td class="num">${v.output.toLocaleString()}</td><td class="num"><strong>${v.total.toLocaleString()}</strong></td></tr>`).join('') +
         `</tbody></table>`;
     }
@@ -1545,7 +1710,7 @@
 
   function exportAnalyticsCSV() {
     const buckets = getFilteredBuckets();
-    const lines = ['Timestamp,Data_ISO,Modelo,Projeto,Tokens_Entrada,Tokens_Cache_Leitura,Tokens_Saida,Turnos'];
+    const lines = ['Timestamp,ISO_Date,Model,Project,Input_Tokens,Cache_Read_Tokens,Output_Tokens,Turns'];
     for (const r of buckets) {
       const [ts, model, project, input, cacheRead, , output, , requests] = r;
       lines.push(`${ts},${new Date(ts).toISOString()},"${model}","${project}",${input||0},${cacheRead||0},${output||0},${requests||1}`);
@@ -1557,20 +1722,14 @@
     const msg = event.data;
     if (msg.type === 'usageData') {
       currentData = msg.data;
+      if (msg.language && (msg.language === 'en' || msg.language === 'pt-BR')) {
+        currentLang = msg.language;
+      }
       if (msg.isSidebar) {
         document.body.classList.add('is-sidebar');
       }
-      renderAgDashboard();
-      renderMissionControl();
+      applyLanguage();
 
-      // If user is currently looking at the analytics tab, refresh the chart/table smoothly with new data!
-      if (currentTab === 'analytics') {
-        renderAnalytics();
-      }
-
-      // Tab preservation:
-      // If forceTab is explicitly set (e.g. from a user command), switch to it.
-      // Otherwise, ALWAYS preserve currentTab so background refreshes never throw the user back!
       if (msg.forceTab && msg.activeTab) {
         switchTab(msg.activeTab, false);
       } else if (!hasInitializedTab) {
@@ -1582,6 +1741,7 @@
     }
   });
 
+  applyLanguage();
   post('ready');
 </script>
 </body>

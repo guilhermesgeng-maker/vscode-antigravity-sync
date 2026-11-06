@@ -45,7 +45,7 @@
       },
       {
         "command": "unifiedUsage.openMissionControl",
-        "title": "AG Usage: Abrir Controle de Missão de Tokens",
+        "title": "AG Usage: Abrir Controle de Tokens",
         "icon": "$(pulse)"
       },
       {
@@ -116,6 +116,17 @@
     "configuration": {
       "title": "AG Usage & Unified AI Monitor",
       "properties": {
+        "unifiedUsage.language": {
+          "type": "string",
+          "enum": ["pt-BR", "en"],
+          "default": "pt-BR",
+          "description": "Idioma da interface / Interface language (Português [pt-BR] ou English [en])."
+        },
+        "unifiedUsage.enableStatusColors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Habilitar coloração de aviso (amarelo) e erro (vermelho) na Barra de Status conforme o consumo de cota."
+        },
         "unifiedUsage.refreshIntervalMinutes": {
           "type": "number",
           "default": 2,

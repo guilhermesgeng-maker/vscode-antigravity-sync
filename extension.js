@@ -47,6 +47,82 @@ const THEME_PALETTE = {
   }
 };
 
+const I18N = {
+  'pt-BR': {
+    notApplicable: 'Não aplicável',
+    weekly: 'Semanal',
+    active: 'Ativo',
+    soon: 'Em breve',
+    dashboard: 'Painel',
+    models: 'Modelos',
+    charts: 'Gráficos',
+    sync: 'Sincronizar',
+    settings: 'Configurações',
+    extraCredits: 'Créditos Extras',
+    refreshed: '$(check) AG Usage & Cotas de IA atualizadas',
+    savedCsv: 'Arquivo CSV salvo em',
+    savedPng: 'Gráfico salvo em',
+    exportedJson: 'Dados de uso exportados com sucesso para',
+    ariaLabel: 'Estatísticas de Uso do AG',
+    quickMenuTitle: 'AG Usage & Monitor Unificado de IA',
+    qmDashboard: '$(rocket) Abrir Painel AG Usage (Saúde, Sparklines e Heatmap)',
+    qmDashboardSub: 'Cotas de modelos, status dos serviços, sparklines e calendário de atividades',
+    qmMission: '$(pulse) Abrir Controle de Tokens',
+    qmMissionSub: 'Detalhamento de tokens 24h / 7d / 30d / Tudo',
+    qmAnalytics: '$(graph) Abrir Gráficos e Exportação (Por Modelo / Token / Workspace)',
+    qmAnalyticsSub: 'Visualizações interativas em gráficos, filtros por período, exportação PNG e CSV',
+    qmRefresh: '$(refresh) Atualizar Cotas e Uso de Tokens Agora',
+    qmRefreshSub: 'Reanalisar sessões do Antigravity, Gemini, Argon, Codex e Claude',
+    qmSyncNow: '$(cloud-download) Sincronizar e Atualizar do GitHub',
+    qmSyncNowSub: 'Baixar atualizações mais recentes da extensão e configurações do GitHub',
+    qmPushSync: '$(cloud-upload) Enviar Configurações e Alterações para o GitHub',
+    qmPushSyncSub: 'Exportar configurações locais, atalhos e arquivos da extensão para o GitHub',
+    qmExportStats: '$(save) Exportar Dados de Uso e Histórico para JSON',
+    qmExportStatsSub: 'Salvar estatísticas agregadas de tokens e cotas em arquivo JSON',
+    qmSettings: '$(gear) Configurar AG Usage & Monitor Unificado',
+    qmSettingsSub: 'Ajustar intervalo de atualização, limites de alerta e idioma'
+  },
+  'en': {
+    notApplicable: 'Not applicable',
+    weekly: 'Weekly',
+    active: 'Active',
+    soon: 'Soon',
+    dashboard: 'Dashboard',
+    models: 'Models',
+    charts: 'Charts',
+    sync: 'Sync',
+    settings: 'Settings',
+    extraCredits: 'Extra Credits',
+    refreshed: '$(check) AG Usage & AI Quotas refreshed',
+    savedCsv: 'CSV saved to',
+    savedPng: 'Chart PNG saved to',
+    exportedJson: 'Usage data exported to',
+    ariaLabel: 'AG Usage Statistics',
+    quickMenuTitle: 'AG Usage & Unified AI Monitor',
+    qmDashboard: '$(rocket) Open AG Usage Dashboard (Health, Sparklines & Heatmap)',
+    qmDashboardSub: 'Model Quotas, Service Health, Sparklines & Activity Calendar',
+    qmMission: '$(pulse) Open Token Control',
+    qmMissionSub: '24h / 7d / 30d / All Token Breakdowns',
+    qmAnalytics: '$(graph) Open Charts & Export (By Model / Token / Workspace)',
+    qmAnalyticsSub: 'Interactive Chart.js visualizations, date range filters, PNG & CSV export',
+    qmRefresh: '$(refresh) Refresh Quotas & Token Usage Now',
+    qmRefreshSub: 'Re-scan Antigravity, Gemini, Argon, Codex & Claude sessions',
+    qmSyncNow: '$(cloud-download) Sync & Auto-Update from GitHub',
+    qmSyncNowSub: 'Pull latest extension updates, settings & keybindings from GitHub',
+    qmPushSync: '$(cloud-upload) Push Local Changes & Configs to GitHub',
+    qmPushSyncSub: 'Export current settings, keybindings & extension files to GitHub',
+    qmExportStats: '$(save) Export Full Usage Data & History to JSON',
+    qmExportStatsSub: 'Save aggregated token & quota statistics to a JSON file',
+    qmSettings: '$(gear) Configure AG Usage & Unified Monitor',
+    qmSettingsSub: 'Adjust refresh interval, warning thresholds, layout and language'
+  }
+};
+
+function getT() {
+  const lang = getConfig().language;
+  return I18N[lang] || I18N['pt-BR'];
+}
+
 function escXml(str) {
   return String(str ?? '').replace(/[<>&"']/g, (ch) => {
     switch (ch) {
@@ -102,11 +178,12 @@ function formatAbsReset(tsMs, diffMs) {
 }
 
 function formatResetPair(resetTimeMs) {
+  const t = getT();
   if (!resetTimeMs || !Number.isFinite(resetTimeMs)) {
-    return { rel: 'Ativo', abs: null };
+    return { rel: t.active, abs: null };
   }
   const diff = resetTimeMs - Date.now();
-  if (diff <= 0) return { rel: 'Em breve', abs: null };
+  if (diff <= 0) return { rel: t.soon, abs: null };
   return {
     rel: formatRelMs(diff),
     abs: formatAbsReset(resetTimeMs, diff)
@@ -123,6 +200,7 @@ function getActivePalette() {
  * Renders a single AG Usage style category card inside the SVG.
  */
 function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette }) {
+  const t = getT();
   const cardPad = 6;
   const cardRadius = 10;
   const cardH = 148;
@@ -175,7 +253,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
       <rect x="${boxX}" y="${boxY0}" rx="6" width="${boxW}" height="${bucketRowH}" fill="${palette.text}" fill-opacity="0.04" stroke="${palette.cardBorder}" stroke-width="1"/>
       <text x="${barX}" y="${valY0}" fill="${palette.text}" ${textStart} font-size="14" font-weight="700">—</text>
       <text x="${textRightX}" y="${labelY0}" fill="${palette.text}" fill-opacity="0.6" ${textEnd} font-size="11" font-weight="650">5h</text>
-      <text x="${textRightX}" y="${valY0}" fill="${palette.text}" fill-opacity="0.85" ${textEnd} font-size="11" font-weight="600">Não aplicável</text>
+      <text x="${textRightX}" y="${valY0}" fill="${palette.text}" fill-opacity="0.85" ${textEnd} font-size="11" font-weight="600">${escXml(t.notApplicable)}</text>
       <rect x="${barX.toFixed(1)}" y="${barY0.toFixed(1)}" rx="${barRadius}" width="${barW.toFixed(1)}" height="${barH}" fill="${palette.barBackground}"/>
     </g>`;
   }
@@ -184,7 +262,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
     const pct = pctInt(b.quota);
     const color = getProgressColor(pct, palette);
     const isWeekly = String(b.window || '').toLowerCase() === 'weekly';
-    const label = isWeekly ? 'Semanal' : '5h';
+    const label = isWeekly ? t.weekly : '5h';
 
     const rowIndex = !has5h ? 1 : idx;
     const boxY = yPos + 32 + rowIndex * (bucketRowH + bucketGap);
@@ -221,6 +299,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
  * Generates the SVG Hover Card for the given categories.
  */
 function buildHoverSvg(data, categoriesOrder) {
+  const t = getT();
   const palette = getActivePalette();
   const agGroups = data?.agGroups || {};
   const list = categoriesOrder.filter((c) => agGroups[c]);
@@ -232,7 +311,7 @@ function buildHoverSvg(data, categoriesOrder) {
   const svgH = rows * rowHeight + 4;
 
   let svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${svgW}" height="${svgH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estatísticas de Uso do AG">`;
+<svg width="${svgW}" height="${svgH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escXml(t.ariaLabel)}">`;
 
   list.forEach((cat, i) => {
     const col = i % cols;
@@ -252,6 +331,7 @@ function buildHoverSvg(data, categoriesOrder) {
 }
 
 function buildAgUsageHoverTooltip(data, primaryOrder) {
+  const t = getT();
   const md = new vscode.MarkdownString('', true);
   md.isTrusted = true;
   md.supportHtml = true;
@@ -270,14 +350,14 @@ function buildAgUsageHoverTooltip(data, primaryOrder) {
 
   md.appendMarkdown(
     `<div align="center"><strong>${escXml(agPlan)} · Codex ${escXml(cxPlanPretty)}</strong> · ` +
-    `<a href="command:unifiedUsage.openDashboard">Painel</a> · ` +
-    `<a href="command:unifiedUsage.openModelsSettings">Modelos</a> · ` +
-    `<a href="command:unifiedUsage.openAnalytics">Gráficos</a> · ` +
-    `<a href="command:unifiedUsage.syncNow">Sincronizar</a> · ` +
-    `<a href="command:unifiedUsage.openSettings">Configurações</a></div>\n`
+    `<a href="command:unifiedUsage.openDashboard">${escXml(t.dashboard)}</a> · ` +
+    `<a href="command:unifiedUsage.openModelsSettings">${escXml(t.models)}</a> · ` +
+    `<a href="command:unifiedUsage.openAnalytics">${escXml(t.charts)}</a> · ` +
+    `<a href="command:unifiedUsage.syncNow">${escXml(t.sync)}</a> · ` +
+    `<a href="command:unifiedUsage.openSettings">${escXml(t.settings)}</a></div>\n`
   );
   md.appendMarkdown(
-    `<div align="center"><small>Tokens — AG/Argon: <code>${agTok}</code> · Codex: <code>${cxTok}</code> · Claude: <code>${clTok}</code> · Créditos Extras: <code>${data?.credits ?? 50}</code></small></div>`
+    `<div align="center"><small>Tokens — AG/Argon: <code>${agTok}</code> · Codex: <code>${cxTok}</code> · Claude: <code>${clTok}</code> · ${escXml(t.extraCredits)}: <code>${data?.credits ?? 50}</code></small></div>`
   );
   return md;
 }
@@ -290,11 +370,18 @@ function getConfig() {
     errorAtPercent: cfg.get('errorAtPercent', 90),
     lookbackDays: cfg.get('lookbackDays', 90),
     showSeparateStatusBarItems: cfg.get('showSeparateStatusBarItems', false),
-    autoSyncGitHub: cfg.get('autoSyncGitHub', true)
+    autoSyncGitHub: cfg.get('autoSyncGitHub', true),
+    enableStatusColors: cfg.get('enableStatusColors', true),
+    language: cfg.get('language', 'pt-BR')
   };
 }
 
 function applyStatusBarColor(item, usedPct, cfg) {
+  if (!cfg.enableStatusColors) {
+    item.backgroundColor = undefined;
+    item.color = undefined;
+    return;
+  }
   if (usedPct >= cfg.errorAtPercent) {
     item.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
     item.color = new vscode.ThemeColor('statusBarItem.errorForeground');
@@ -472,22 +559,27 @@ class UnifiedSidebarProvider {
       data,
       isSidebar: true,
       activeTab: pendingActiveTab,
-      forceTab: false
+      forceTab: false,
+      language: getConfig().language
     });
   }
 }
 
 async function handleWebviewMessage(context, msg, targetWebview) {
+  const t = getT();
   if (msg.type === 'tabChanged' && msg.tab) {
-    // Keep track of the user's selected tab so background refreshes preserve it!
     pendingActiveTab = msg.tab;
+  } else if (msg.type === 'setLanguage' && msg.language) {
+    await vscode.workspace.getConfiguration('unifiedUsage').update('language', msg.language, vscode.ConfigurationTarget.Global);
+    if (lastData) updateStatusBars(lastData);
   } else if (msg.type === 'ready') {
     if (lastData) {
       targetWebview.postMessage({
         type: 'usageData',
         data: lastData,
         activeTab: pendingActiveTab,
-        forceTab: false
+        forceTab: false,
+        language: getConfig().language
       });
     } else {
       await refreshUsage(context, false);
@@ -515,21 +607,21 @@ async function handleWebviewMessage(context, msg, targetWebview) {
   } else if (msg.type === 'saveCSV' && msg.data) {
     const uri = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file('ai_usage_analytics.csv'),
-      filters: { 'Arquivos CSV (*.csv)': ['csv'] }
+      filters: { 'CSV Files (*.csv)': ['csv'] }
     });
     if (uri) {
       fs.writeFileSync(uri.fsPath, msg.data, 'utf8');
-      vscode.window.showInformationMessage(`Arquivo CSV salvo em ${uri.fsPath}`);
+      vscode.window.showInformationMessage(`${t.savedCsv} ${uri.fsPath}`);
     }
   } else if (msg.type === 'saveImage' && msg.data) {
     const uri = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file('ai_usage_chart.png'),
-      filters: { 'Imagens PNG (*.png)': ['png'] }
+      filters: { 'PNG Images (*.png)': ['png'] }
     });
     if (uri) {
       const base64Data = msg.data.replace(/^data:image\/png;base64,/, '');
       fs.writeFileSync(uri.fsPath, Buffer.from(base64Data, 'base64'));
-      vscode.window.showInformationMessage(`Gráfico salvo em ${uri.fsPath}`);
+      vscode.window.showInformationMessage(`${t.savedPng} ${uri.fsPath}`);
     }
   }
 }
@@ -558,16 +650,16 @@ async function refreshUsage(context, showNotification = false) {
     updateStatusBars(data);
     if (sidebarProvider) sidebarProvider.update(data);
     if (panel) {
-      // NOTE: forceTab is false here so periodic refresh will NOT reset the user's active tab!
       panel.webview.postMessage({
         type: 'usageData',
         data,
         activeTab: pendingActiveTab,
-        forceTab: false
+        forceTab: false,
+        language: cfg.language
       });
     }
     if (showNotification) {
-      vscode.window.setStatusBarMessage('$(check) AG Usage & Cotas de IA atualizadas', 3000);
+      vscode.window.setStatusBarMessage(getT().refreshed, 3000);
     }
   } catch (err) {
     console.error('Unified Usage refresh error:', err);
@@ -587,15 +679,17 @@ function openUnifiedPanel(context, defaultTab = null, forceTab = false) {
         type: 'usageData',
         data: lastData,
         activeTab: pendingActiveTab,
-        forceTab: !!forceTab
+        forceTab: !!forceTab,
+        language: getConfig().language
       });
     }
     return;
   }
 
+  const t = getT();
   panel = vscode.window.createWebviewPanel(
     'unifiedAgentUsage',
-    'Painel de Estatísticas e AG Usage',
+    t.title,
     vscode.ViewColumn.One,
     {
       enableScripts: true,
@@ -617,53 +711,54 @@ function openUnifiedPanel(context, defaultTab = null, forceTab = false) {
 }
 
 async function showQuickMenu(context) {
+  const t = getT();
   const agTokens = formatTokens(lastData?.antigravity?.windows?.all?.totals?.total || 0);
   const cxTokens = formatTokens(lastData?.codex?.windows?.all?.totals?.total || 0);
   const items = [
     {
-      label: '$(rocket) Abrir Painel AG Usage (Saúde, Sparklines e Heatmap)',
-      description: 'Cotas de modelos, créditos extras, status dos serviços, sparklines e calendário de atividades',
+      label: t.qmDashboard,
+      description: t.qmDashboardSub,
       action: () => openUnifiedPanel(context, 'ag-dashboard', true)
     },
     {
-      label: '$(pulse) Abrir Controle de Missão de Tokens',
-      description: `Detalhamento de tokens 24h / 7d / 30d / Tudo (AG: ${agTokens} | Codex: ${cxTokens})`,
+      label: t.qmMission,
+      description: `${t.qmMissionSub} (AG: ${agTokens} | Codex: ${cxTokens})`,
       action: () => openUnifiedPanel(context, 'mission', true)
     },
     {
-      label: '$(graph) Abrir Gráficos e Exportação (Por Modelo / Token / Projeto)',
-      description: 'Visualizações interativas em gráficos, filtros por período, exportação PNG e CSV',
+      label: t.qmAnalytics,
+      description: t.qmAnalyticsSub,
       action: () => openUnifiedPanel(context, 'analytics', true)
     },
     {
-      label: '$(refresh) Atualizar Cotas e Uso de Tokens Agora',
-      description: 'Reanalisar sessões do Antigravity, Gemini, Argon, Codex e Claude',
+      label: t.qmRefresh,
+      description: t.qmRefreshSub,
       action: () => refreshUsage(context, true)
     },
     {
-      label: '$(cloud-download) Sincronizar e Atualizar do GitHub',
-      description: 'Baixar atualizações mais recentes da extensão e configurações do GitHub',
+      label: t.qmSyncNow,
+      description: t.qmSyncNowSub,
       action: () => vscode.commands.executeCommand('unifiedUsage.syncNow')
     },
     {
-      label: '$(cloud-upload) Enviar Configurações e Alterações para o GitHub',
-      description: 'Exportar configurações locais, atalhos e arquivos da extensão para o GitHub',
+      label: t.qmPushSync,
+      description: t.qmPushSyncSub,
       action: () => vscode.commands.executeCommand('unifiedUsage.pushSync')
     },
     {
-      label: '$(save) Exportar Dados de Uso e Histórico para JSON',
-      description: 'Salvar estatísticas agregadas de tokens e cotas em arquivo JSON',
+      label: t.qmExportStats,
+      description: t.qmExportStatsSub,
       action: () => vscode.commands.executeCommand('unifiedUsage.exportStats')
     },
     {
-      label: '$(gear) Configurar AG Usage & Monitor Unificado',
-      description: 'Ajustar intervalo de atualização, limites de alerta e layout da barra de status',
+      label: t.qmSettings,
+      description: t.qmSettingsSub,
       action: () => vscode.commands.executeCommand('unifiedUsage.openSettings')
     }
   ];
 
   const picked = await vscode.window.showQuickPick(items, {
-    placeHolder: `AG Usage & Monitor Unificado de IA — Antigravity: ${agTokens} | Codex: ${cxTokens} | Claude: Pronto`
+    placeHolder: `${t.quickMenuTitle} — Antigravity: ${agTokens} | Codex: ${cxTokens}`
   });
   if (picked && picked.action) picked.action();
 }
@@ -671,13 +766,11 @@ async function showQuickMenu(context) {
 function activate(context) {
   const cfg = getConfig();
 
-  // Create unified status bar item (Gemini + Argon + Codex + Claude)
   agStatusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   agStatusBar.text = '$(rocket) Gemini ... · Argon ... | Codex ... · Claude ...';
   agStatusBar.command = 'unifiedUsage.openDashboard';
   agStatusBar.show();
 
-  // Secondary status bar item created only for optional separation
   codexStatusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 99);
   codexStatusBar.command = 'unifiedUsage.openDashboard';
   if (cfg.showSeparateStatusBarItems) {
@@ -704,14 +797,15 @@ function activate(context) {
     vscode.commands.registerCommand('unifiedUsage.syncNow', () => pullAndApplyUpdates(vscode, { silent: false })),
     vscode.commands.registerCommand('unifiedUsage.pushSync', () => pushChangesToGitHub(vscode, { silent: false })),
     vscode.commands.registerCommand('unifiedUsage.exportStats', async () => {
+      const t = getT();
       if (!lastData) await refreshUsage(context, false);
       const uri = await vscode.window.showSaveDialog({
         defaultUri: vscode.Uri.file('ag_unified_usage.json'),
-        filters: { 'Arquivos JSON (*.json)': ['json'] }
+        filters: { 'JSON Files (*.json)': ['json'] }
       });
       if (uri && lastData) {
         fs.writeFileSync(uri.fsPath, JSON.stringify(lastData, null, 2), 'utf8');
-        vscode.window.showInformationMessage(`Dados de uso exportados com sucesso para ${uri.fsPath}`);
+        vscode.window.showInformationMessage(`${t.exportedJson} ${uri.fsPath}`);
       }
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
@@ -728,7 +822,6 @@ function activate(context) {
   refreshUsage(context, false);
   scheduleRefresh(context);
 
-  // Automatic GitHub sync & update check on startup and every 30 minutes
   if (getConfig().autoSyncGitHub) {
     setTimeout(() => {
       pullAndApplyUpdates(vscode, { silent: true }).catch(() => {});
