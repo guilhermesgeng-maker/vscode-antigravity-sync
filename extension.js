@@ -103,10 +103,10 @@ function formatAbsReset(tsMs, diffMs) {
 
 function formatResetPair(resetTimeMs) {
   if (!resetTimeMs || !Number.isFinite(resetTimeMs)) {
-    return { rel: 'Active', abs: null };
+    return { rel: 'Ativo', abs: null };
   }
   const diff = resetTimeMs - Date.now();
-  if (diff <= 0) return { rel: 'Soon', abs: null };
+  if (diff <= 0) return { rel: 'Em breve', abs: null };
   return {
     rel: formatRelMs(diff),
     abs: formatAbsReset(resetTimeMs, diff)
@@ -120,7 +120,7 @@ function getActivePalette() {
 }
 
 /**
- * Renders a single AG Usage style category card inside the SVG (exact match to Image 1).
+ * Renders a single AG Usage style category card inside the SVG.
  */
 function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette }) {
   const cardPad = 6;
@@ -175,7 +175,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
       <rect x="${boxX}" y="${boxY0}" rx="6" width="${boxW}" height="${bucketRowH}" fill="${palette.text}" fill-opacity="0.04" stroke="${palette.cardBorder}" stroke-width="1"/>
       <text x="${barX}" y="${valY0}" fill="${palette.text}" ${textStart} font-size="14" font-weight="700">—</text>
       <text x="${textRightX}" y="${labelY0}" fill="${palette.text}" fill-opacity="0.6" ${textEnd} font-size="11" font-weight="650">5h</text>
-      <text x="${textRightX}" y="${valY0}" fill="${palette.text}" fill-opacity="0.85" ${textEnd} font-size="11" font-weight="600">Not applicable</text>
+      <text x="${textRightX}" y="${valY0}" fill="${palette.text}" fill-opacity="0.85" ${textEnd} font-size="11" font-weight="600">Não aplicável</text>
       <rect x="${barX.toFixed(1)}" y="${barY0.toFixed(1)}" rx="${barRadius}" width="${barW.toFixed(1)}" height="${barH}" fill="${palette.barBackground}"/>
     </g>`;
   }
@@ -184,7 +184,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
     const pct = pctInt(b.quota);
     const color = getProgressColor(pct, palette);
     const isWeekly = String(b.window || '').toLowerCase() === 'weekly';
-    const label = isWeekly ? 'Weekly' : '5h';
+    const label = isWeekly ? 'Semanal' : '5h';
 
     const rowIndex = !has5h ? 1 : idx;
     const boxY = yPos + 32 + rowIndex * (bucketRowH + bucketGap);
@@ -218,7 +218,7 @@ function renderSvgCategoryCard({ category, group, xPos, yPos, colWidth, palette 
 }
 
 /**
- * Generates the Image 1 SVG Hover Card for the given categories (e.g. ['Gemini', 'Argon'] or 2x2 grid ['Gemini', 'Argon', 'Codex', 'Claude']).
+ * Generates the SVG Hover Card for the given categories.
  */
 function buildHoverSvg(data, categoriesOrder) {
   const palette = getActivePalette();
@@ -232,7 +232,7 @@ function buildHoverSvg(data, categoriesOrder) {
   const svgH = rows * rowHeight + 4;
 
   let svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="${svgW}" height="${svgH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AG Usage Statistics">`;
+<svg width="${svgW}" height="${svgH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Estatísticas de Uso do AG">`;
 
   list.forEach((cat, i) => {
     const col = i % cols;
@@ -270,14 +270,14 @@ function buildAgUsageHoverTooltip(data, primaryOrder) {
 
   md.appendMarkdown(
     `<div align="center"><strong>${escXml(agPlan)} · Codex ${escXml(cxPlanPretty)}</strong> · ` +
-    `<a href="command:unifiedUsage.openDashboard">Dashboard</a> · ` +
-    `<a href="command:unifiedUsage.openModelsSettings">Models</a> · ` +
-    `<a href="command:unifiedUsage.openAnalytics">Charts</a> · ` +
-    `<a href="command:unifiedUsage.syncNow">Sync</a> · ` +
-    `<a href="command:unifiedUsage.openSettings">Settings</a></div>\n`
+    `<a href="command:unifiedUsage.openDashboard">Painel</a> · ` +
+    `<a href="command:unifiedUsage.openModelsSettings">Modelos</a> · ` +
+    `<a href="command:unifiedUsage.openAnalytics">Gráficos</a> · ` +
+    `<a href="command:unifiedUsage.syncNow">Sincronizar</a> · ` +
+    `<a href="command:unifiedUsage.openSettings">Configurações</a></div>\n`
   );
   md.appendMarkdown(
-    `<div align="center"><small>Tokens — AG/Argon: <code>${agTok}</code> · Codex: <code>${cxTok}</code> · Claude: <code>${clTok}</code> · Extra Credits: <code>${data?.credits ?? 50}</code></small></div>`
+    `<div align="center"><small>Tokens — AG/Argon: <code>${agTok}</code> · Codex: <code>${cxTok}</code> · Claude: <code>${clTok}</code> · Créditos Extras: <code>${data?.credits ?? 50}</code></small></div>`
   );
   return md;
 }
@@ -289,7 +289,7 @@ function getConfig() {
     warnAtPercent: cfg.get('warnAtPercent', 75),
     errorAtPercent: cfg.get('errorAtPercent', 90),
     lookbackDays: cfg.get('lookbackDays', 90),
-    showSeparateStatusBarItems: cfg.get('showSeparateStatusBarItems', true),
+    showSeparateStatusBarItems: cfg.get('showSeparateStatusBarItems', false),
     autoSyncGitHub: cfg.get('autoSyncGitHub', true)
   };
 }
@@ -345,22 +345,26 @@ function updateStatusBars(data) {
     applyStatusBarColor(agStatusBar, 100 - Math.min(gemPct, argPct), cfg);
     agStatusBar.show();
 
-    codexStatusBar.text = `$(terminal) Codex ${cxStr}   Claude ${clStr}   (${cxTok})`;
-    codexStatusBar.tooltip = buildAgUsageHoverTooltip(data, ['Codex', 'Claude', 'Gemini', 'Argon']);
-    applyStatusBarColor(codexStatusBar, 100 - Math.min(cxPct, clPct), cfg);
-    codexStatusBar.show();
+    if (codexStatusBar) {
+      codexStatusBar.text = `$(terminal) Codex ${cxStr}   Claude ${clStr}   (${cxTok})`;
+      codexStatusBar.tooltip = buildAgUsageHoverTooltip(data, ['Codex', 'Claude', 'Gemini', 'Argon']);
+      applyStatusBarColor(codexStatusBar, 100 - Math.min(cxPct, clPct), cfg);
+      codexStatusBar.show();
+    }
   } else {
-    agStatusBar.text = `$(rocket) Gemini ${gemStr}   Argon ${argStr}   Codex ${cxStr}   Claude ${clStr}`;
+    // UNIFIED SINGLE STATUS BAR ITEM: Gemini + Argon + Codex + Claude
+    agStatusBar.text = `$(rocket) Gemini ${gemStr} · Argon ${argStr} | Codex ${cxStr} · Claude ${clStr}`;
     agStatusBar.tooltip = buildAgUsageHoverTooltip(data, ['Gemini', 'Argon', 'Codex', 'Claude']);
     applyStatusBarColor(agStatusBar, 100 - Math.min(gemPct, argPct, cxPct, clPct), cfg);
     agStatusBar.show();
-    codexStatusBar.hide();
+    if (codexStatusBar) {
+      codexStatusBar.hide();
+    }
   }
 }
 
 /**
  * Maintains quota history snapshots & daily activity for AG Usage sparklines & monthly heatmap.
- * Automatically seeds from historical token buckets so the sparklines and heatmap are populated immediately!
  */
 function updateQuotaHistoryState(context, data) {
   const history = context.globalState.get('agQuotaHistoryV2', []);
@@ -373,7 +377,6 @@ function updateQuotaHistoryState(context, data) {
     const resetTime = g[cat]?.resetTime ?? (now + 4 * 3600000);
     const catEntries = history.filter((e) => e.category === cat);
     if (catEntries.length === 0) {
-      // Create a smooth 6-point sparkline baseline leading up to current quota
       const offsets = [-5 * 3600000, -4 * 3600000, -3 * 3600000, -2 * 3600000, -3600000, 0];
       const baseCurve = [
         Math.min(1, q + 0.04),
@@ -421,7 +424,7 @@ function updateQuotaHistoryState(context, data) {
   }
   context.globalState.update('agQuotaHistoryV2', pruned);
 
-  // Build daily activity map combining Antigravity, Codex, and Claude daily token buckets
+  // Build daily activity map
   const dailyMap = new Map();
   const addDays = (byDayArr, sourceLabel) => {
     for (const d of byDayArr || []) {
@@ -468,18 +471,23 @@ class UnifiedSidebarProvider {
       type: 'usageData',
       data,
       isSidebar: true,
-      activeTab: 'ag-dashboard'
+      activeTab: pendingActiveTab,
+      forceTab: false
     });
   }
 }
 
 async function handleWebviewMessage(context, msg, targetWebview) {
-  if (msg.type === 'ready') {
+  if (msg.type === 'tabChanged' && msg.tab) {
+    // Keep track of the user's selected tab so background refreshes preserve it!
+    pendingActiveTab = msg.tab;
+  } else if (msg.type === 'ready') {
     if (lastData) {
       targetWebview.postMessage({
         type: 'usageData',
         data: lastData,
-        activeTab: pendingActiveTab
+        activeTab: pendingActiveTab,
+        forceTab: false
       });
     } else {
       await refreshUsage(context, false);
@@ -487,11 +495,11 @@ async function handleWebviewMessage(context, msg, targetWebview) {
   } else if (msg.type === 'refresh') {
     await refreshUsage(context, true);
   } else if (msg.type === 'openDashboard') {
-    openUnifiedPanel(context, 'ag-dashboard');
+    openUnifiedPanel(context, 'ag-dashboard', true);
   } else if (msg.type === 'openMissionControl') {
-    openUnifiedPanel(context, 'mission');
+    openUnifiedPanel(context, 'mission', true);
   } else if (msg.type === 'openAnalytics') {
-    openUnifiedPanel(context, 'analytics');
+    openUnifiedPanel(context, 'analytics', true);
   } else if (msg.type === 'openSettings') {
     vscode.commands.executeCommand('unifiedUsage.openSettings');
   } else if (msg.type === 'syncNow') {
@@ -507,21 +515,21 @@ async function handleWebviewMessage(context, msg, targetWebview) {
   } else if (msg.type === 'saveCSV' && msg.data) {
     const uri = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file('ai_usage_analytics.csv'),
-      filters: { 'CSV Files': ['csv'] }
+      filters: { 'Arquivos CSV (*.csv)': ['csv'] }
     });
     if (uri) {
       fs.writeFileSync(uri.fsPath, msg.data, 'utf8');
-      vscode.window.showInformationMessage(`Saved CSV to ${uri.fsPath}`);
+      vscode.window.showInformationMessage(`Arquivo CSV salvo em ${uri.fsPath}`);
     }
   } else if (msg.type === 'saveImage' && msg.data) {
     const uri = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file('ai_usage_chart.png'),
-      filters: { 'PNG Images': ['png'] }
+      filters: { 'Imagens PNG (*.png)': ['png'] }
     });
     if (uri) {
       const base64Data = msg.data.replace(/^data:image\/png;base64,/, '');
       fs.writeFileSync(uri.fsPath, Buffer.from(base64Data, 'base64'));
-      vscode.window.showInformationMessage(`Saved chart PNG to ${uri.fsPath}`);
+      vscode.window.showInformationMessage(`Gráfico salvo em ${uri.fsPath}`);
     }
   }
 }
@@ -550,10 +558,16 @@ async function refreshUsage(context, showNotification = false) {
     updateStatusBars(data);
     if (sidebarProvider) sidebarProvider.update(data);
     if (panel) {
-      panel.webview.postMessage({ type: 'usageData', data, activeTab: pendingActiveTab });
+      // NOTE: forceTab is false here so periodic refresh will NOT reset the user's active tab!
+      panel.webview.postMessage({
+        type: 'usageData',
+        data,
+        activeTab: pendingActiveTab,
+        forceTab: false
+      });
     }
     if (showNotification) {
-      vscode.window.setStatusBarMessage('$(check) AG Usage & AI Quotas refreshed', 3000);
+      vscode.window.setStatusBarMessage('$(check) AG Usage & Cotas de IA atualizadas', 3000);
     }
   } catch (err) {
     console.error('Unified Usage refresh error:', err);
@@ -562,19 +576,26 @@ async function refreshUsage(context, showNotification = false) {
   }
 }
 
-function openUnifiedPanel(context, defaultTab = 'ag-dashboard') {
-  pendingActiveTab = defaultTab;
+function openUnifiedPanel(context, defaultTab = null, forceTab = false) {
+  if (defaultTab) {
+    pendingActiveTab = defaultTab;
+  }
   if (panel) {
     panel.reveal(vscode.ViewColumn.One);
     if (lastData) {
-      panel.webview.postMessage({ type: 'usageData', data: lastData, activeTab: defaultTab });
+      panel.webview.postMessage({
+        type: 'usageData',
+        data: lastData,
+        activeTab: pendingActiveTab,
+        forceTab: !!forceTab
+      });
     }
     return;
   }
 
   panel = vscode.window.createWebviewPanel(
     'unifiedAgentUsage',
-    'AG Usage & AI Analytics Dashboard',
+    'Painel de Estatísticas e AG Usage',
     vscode.ViewColumn.One,
     {
       enableScripts: true,
@@ -600,73 +621,81 @@ async function showQuickMenu(context) {
   const cxTokens = formatTokens(lastData?.codex?.windows?.all?.totals?.total || 0);
   const items = [
     {
-      label: '$(rocket) Open AG Usage Dashboard (Health, Sparklines & Heatmap)',
-      description: `Model Quotas, Extra Credits, StatusGator Health, Sparklines & Activity Calendar`,
-      action: () => openUnifiedPanel(context, 'ag-dashboard')
+      label: '$(rocket) Abrir Painel AG Usage (Saúde, Sparklines e Heatmap)',
+      description: 'Cotas de modelos, créditos extras, status dos serviços, sparklines e calendário de atividades',
+      action: () => openUnifiedPanel(context, 'ag-dashboard', true)
     },
     {
-      label: '$(pulse) Open Token Mission Control',
-      description: `24h / 7d / 30d / All Token Breakdowns (AG: ${agTokens} | Codex: ${cxTokens})`,
-      action: () => openUnifiedPanel(context, 'mission')
+      label: '$(pulse) Abrir Controle de Missão de Tokens',
+      description: `Detalhamento de tokens 24h / 7d / 30d / Tudo (AG: ${agTokens} | Codex: ${cxTokens})`,
+      action: () => openUnifiedPanel(context, 'mission', true)
     },
     {
-      label: '$(graph) Open Charts & Analytics (By Model / Token / Project)',
-      description: 'Interactive Chart.js visualizations, date range filters, PNG & CSV export',
-      action: () => openUnifiedPanel(context, 'analytics')
+      label: '$(graph) Abrir Gráficos e Exportação (Por Modelo / Token / Projeto)',
+      description: 'Visualizações interativas em gráficos, filtros por período, exportação PNG e CSV',
+      action: () => openUnifiedPanel(context, 'analytics', true)
     },
     {
-      label: '$(refresh) Refresh Quotas & Token Usage Now',
-      description: 'Re-scan Antigravity, Gemini, Argon, Codex & Claude sessions',
+      label: '$(refresh) Atualizar Cotas e Uso de Tokens Agora',
+      description: 'Reanalisar sessões do Antigravity, Gemini, Argon, Codex e Claude',
       action: () => refreshUsage(context, true)
     },
     {
-      label: '$(cloud-download) Sync & Auto-Update from GitHub',
-      description: 'Pull latest extension updates, settings.json & keybindings.json from GitHub',
+      label: '$(cloud-download) Sincronizar e Atualizar do GitHub',
+      description: 'Baixar atualizações mais recentes da extensão e configurações do GitHub',
       action: () => vscode.commands.executeCommand('unifiedUsage.syncNow')
     },
     {
-      label: '$(cloud-upload) Push Local Changes & Configs to GitHub',
-      description: 'Export current settings, keybindings & extension files to GitHub for other PCs',
+      label: '$(cloud-upload) Enviar Configurações e Alterações para o GitHub',
+      description: 'Exportar configurações locais, atalhos e arquivos da extensão para o GitHub',
       action: () => vscode.commands.executeCommand('unifiedUsage.pushSync')
     },
     {
-      label: '$(save) Export Full Usage Data & History to JSON',
-      description: 'Save aggregated token & quota statistics to a JSON file',
+      label: '$(save) Exportar Dados de Uso e Histórico para JSON',
+      description: 'Salvar estatísticas agregadas de tokens e cotas em arquivo JSON',
       action: () => vscode.commands.executeCommand('unifiedUsage.exportStats')
     },
     {
-      label: '$(gear) Configure AG Usage & Unified Monitor',
-      description: 'Adjust refresh interval, warning thresholds, and status bar layout',
+      label: '$(gear) Configurar AG Usage & Monitor Unificado',
+      description: 'Ajustar intervalo de atualização, limites de alerta e layout da barra de status',
       action: () => vscode.commands.executeCommand('unifiedUsage.openSettings')
     }
   ];
 
   const picked = await vscode.window.showQuickPick(items, {
-    placeHolder: `AG Usage & Unified AI Monitor — Antigravity: ${agTokens} | Codex: ${cxTokens} | Claude: Ready`
+    placeHolder: `AG Usage & Monitor Unificado de IA — Antigravity: ${agTokens} | Codex: ${cxTokens} | Claude: Pronto`
   });
   if (picked && picked.action) picked.action();
 }
 
 function activate(context) {
+  const cfg = getConfig();
+
+  // Create unified status bar item (Gemini + Argon + Codex + Claude)
   agStatusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  agStatusBar.text = '$(rocket) Gemini ...   Argon ...';
+  agStatusBar.text = '$(rocket) Gemini ... · Argon ... | Codex ... · Claude ...';
   agStatusBar.command = 'unifiedUsage.openDashboard';
   agStatusBar.show();
 
+  // Secondary status bar item created only for optional separation
   codexStatusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 99);
-  codexStatusBar.text = '$(terminal) Codex ...   Claude ...';
   codexStatusBar.command = 'unifiedUsage.openDashboard';
-  codexStatusBar.show();
+  if (cfg.showSeparateStatusBarItems) {
+    codexStatusBar.text = '$(terminal) Codex ...   Claude ...';
+    codexStatusBar.show();
+  } else {
+    codexStatusBar.hide();
+  }
 
   sidebarProvider = new UnifiedSidebarProvider(context);
   context.subscriptions.push(
     agStatusBar,
     codexStatusBar,
     vscode.window.registerWebviewViewProvider('unifiedUsage.sidebarView', sidebarProvider),
-    vscode.commands.registerCommand('unifiedUsage.openDashboard', () => openUnifiedPanel(context, 'ag-dashboard')),
-    vscode.commands.registerCommand('unifiedUsage.openMissionControl', () => openUnifiedPanel(context, 'mission')),
-    vscode.commands.registerCommand('unifiedUsage.openAnalytics', () => openUnifiedPanel(context, 'analytics')),
-    vscode.commands.registerCommand('unifiedUsage.openModelsSettings', () => openUnifiedPanel(context, 'ag-dashboard')),
+    vscode.commands.registerCommand('unifiedUsage.openDashboard', () => openUnifiedPanel(context, 'ag-dashboard', true)),
+    vscode.commands.registerCommand('unifiedUsage.openMissionControl', () => openUnifiedPanel(context, 'mission', true)),
+    vscode.commands.registerCommand('unifiedUsage.openAnalytics', () => openUnifiedPanel(context, 'analytics', true)),
+    vscode.commands.registerCommand('unifiedUsage.openModelsSettings', () => openUnifiedPanel(context, 'ag-dashboard', true)),
     vscode.commands.registerCommand('unifiedUsage.openSettings', () =>
       vscode.commands.executeCommand('workbench.action.openSettings', 'unifiedUsage')
     ),
@@ -678,11 +707,11 @@ function activate(context) {
       if (!lastData) await refreshUsage(context, false);
       const uri = await vscode.window.showSaveDialog({
         defaultUri: vscode.Uri.file('ag_unified_usage.json'),
-        filters: { 'JSON Files': ['json'] }
+        filters: { 'Arquivos JSON (*.json)': ['json'] }
       });
       if (uri && lastData) {
         fs.writeFileSync(uri.fsPath, JSON.stringify(lastData, null, 2), 'utf8');
-        vscode.window.showInformationMessage(`Exported usage data to ${uri.fsPath}`);
+        vscode.window.showInformationMessage(`Dados de uso exportados com sucesso para ${uri.fsPath}`);
       }
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {

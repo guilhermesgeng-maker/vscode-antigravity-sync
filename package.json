@@ -1,7 +1,7 @@
 {
   "name": "agent-usage-monitor",
-  "displayName": "AG Usage & Unified AI Monitor (Antigravity + Gemini + Codex + Claude)",
-  "description": "All-in-one AI usage & quota monitor combining AG Usage (SVG hover cards, Service Health, Sparklines, Reset Timeline, Activity Heatmap), Antigravity/Gemini/Argon, OpenAI Codex/Astra/Luna, and Claude Code.",
+  "displayName": "AG Usage & Monitor Unificado de IA (Antigravity + Gemini + Codex + Claude)",
+  "description": "Monitor completo de uso e cotas de IA combinando AG Usage (gráficos SVG ao passar o mouse, Saúde dos Serviços, Sparklines, Linha do Tempo de Reinício, Mapa de Atividade), Antigravity/Gemini/Argon, OpenAI Codex/Astra/Luna e Claude Code.",
   "version": "1.0.0",
   "publisher": "unified",
   "icon": "assets/icon.png",
@@ -22,7 +22,7 @@
       "activitybar": [
         {
           "id": "ag-usage-sidebar",
-          "title": "AG Usage & AI Monitor",
+          "title": "AG Usage & Monitor de IA",
           "icon": "assets/icon.png"
         }
       ]
@@ -32,7 +32,7 @@
         {
           "type": "webview",
           "id": "unifiedUsage.sidebarView",
-          "name": "AG Usage Dashboard",
+          "name": "Painel AG Usage",
           "icon": "assets/icon.png"
         }
       ]
@@ -40,52 +40,52 @@
     "commands": [
       {
         "command": "unifiedUsage.openDashboard",
-        "title": "AG Usage: Open Full Dashboard (Health, Sparklines, Heatmap & Quotas)",
+        "title": "AG Usage: Abrir Painel Completo (Saúde, Sparklines, Heatmap e Cotas)",
         "icon": "$(dashboard)"
       },
       {
         "command": "unifiedUsage.openMissionControl",
-        "title": "AG Usage: Open Token Mission Control",
+        "title": "AG Usage: Abrir Controle de Missão de Tokens",
         "icon": "$(pulse)"
       },
       {
         "command": "unifiedUsage.openAnalytics",
-        "title": "AG Usage: Open Charts & Analytics (Model / Token / Project)",
+        "title": "AG Usage: Abrir Gráficos e Exportação (Modelo / Token / Projeto)",
         "icon": "$(graph)"
       },
       {
         "command": "unifiedUsage.openModelsSettings",
-        "title": "AG Usage: Models & Token Breakdown",
+        "title": "AG Usage: Modelos e Detalhamento de Tokens",
         "icon": "$(symbol-misc)"
       },
       {
         "command": "unifiedUsage.openSettings",
-        "title": "AG Usage: Open Settings",
+        "title": "AG Usage: Abrir Configurações",
         "icon": "$(gear)"
       },
       {
         "command": "unifiedUsage.quickMenu",
-        "title": "AG Usage: Quick Status & Actions",
+        "title": "AG Usage: Menu Rápido de Status e Ações",
         "icon": "$(list-selection)"
       },
       {
         "command": "unifiedUsage.refresh",
-        "title": "AG Usage: Refresh Quotas & Token Usage",
+        "title": "AG Usage: Atualizar Cotas e Uso de Tokens",
         "icon": "$(refresh)"
       },
       {
         "command": "unifiedUsage.exportStats",
-        "title": "AG Usage: Export Usage & History to JSON",
+        "title": "AG Usage: Exportar Estatísticas e Histórico para JSON",
         "icon": "$(save)"
       },
       {
         "command": "unifiedUsage.syncNow",
-        "title": "AG Usage: Sync & Auto-Update from GitHub",
+        "title": "AG Usage: Sincronizar e Atualizar do GitHub",
         "icon": "$(cloud-download)"
       },
       {
         "command": "unifiedUsage.pushSync",
-        "title": "AG Usage: Push Local Changes & Configs to GitHub",
+        "title": "AG Usage: Enviar Configurações e Alterações para o GitHub",
         "icon": "$(cloud-upload)"
       }
     ],
@@ -121,38 +121,38 @@
           "default": 2,
           "minimum": 1,
           "maximum": 120,
-          "description": "How often to refresh local token logs, StatusGator health, and live quota percentages (in minutes)."
+          "description": "Frequência de atualização dos registros locais de tokens, status dos serviços e porcentagens de cota em tempo real (em minutos)."
         },
         "unifiedUsage.warnAtPercent": {
           "type": "number",
           "default": 75,
           "minimum": 1,
           "maximum": 100,
-          "description": "Color the status bar item warning yellow when usage reaches this percentage."
+          "description": "Colorir o item da barra de status em amarelo (aviso) quando o uso atingir esta porcentagem."
         },
         "unifiedUsage.errorAtPercent": {
           "type": "number",
           "default": 90,
           "minimum": 1,
           "maximum": 100,
-          "description": "Color the status bar item error red when usage reaches this percentage."
+          "description": "Colorir o item da barra de status em vermelho (erro) quando o uso atingir esta porcentagem."
         },
         "unifiedUsage.lookbackDays": {
           "type": "number",
           "default": 90,
           "minimum": 7,
           "maximum": 365,
-          "description": "Ignore session logs older than this many days when scanning."
+          "description": "Ignorar logs de sessão mais antigos que este número de dias ao analisar."
         },
         "unifiedUsage.showSeparateStatusBarItems": {
           "type": "boolean",
-          "default": true,
-          "description": "Show Status Bar shortcuts for Antigravity/Gemini/Argon and Codex/Claude."
+          "default": false,
+          "description": "Exibir itens separados na Barra de Status para Gemini/Argon e Codex/Claude (padrão: falso, unificado em um único item)."
         },
         "unifiedUsage.autoSyncGitHub": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically check GitHub on startup and every 30 minutes to pull extension & Antigravity config updates across all your PCs."
+          "description": "Verificar o GitHub automaticamente ao iniciar e a cada 30 minutos para sincronizar atualizações da extensão e configurações do Antigravity."
         }
       }
     }

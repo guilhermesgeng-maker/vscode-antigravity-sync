@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AG Usage & Unified AI Monitor</title>
+<title>AG Usage & Monitor de IA Unificado</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root {
@@ -108,7 +108,7 @@
   .view-pane { display: none; flex-direction: column; gap: 16px; }
   .view-pane.active { display: flex; }
 
-  /* Plan & Credits Top Row (AG Usage style) */
+  /* Plan & Credits Top Row */
   .plan-credits-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -152,7 +152,7 @@
     color: var(--success);
   }
 
-  /* ================= IMAGE 2 HERO SHOWCASE (3 COLUMNS) ================= */
+  /* 3-Column Hero Showcase */
   .ag-showcase-container {
     background: #18181c;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -208,7 +208,7 @@
     position: relative;
   }
 
-  /* 1. Service Health Box (Image 2 Left Card) */
+  /* 1. Service Health Box */
   .public-status-link {
     display: flex;
     align-items: center;
@@ -260,7 +260,7 @@
   .h-warn { background: #f59e0b; }
   .h-down { background: #ef4444; }
 
-  /* 2. Sparkline Trend Card (Image 2 Center Card) */
+  /* 2. Sparkline Trend Card */
   .spark-cat-pills {
     display: inline-flex;
     gap: 4px;
@@ -333,7 +333,7 @@
     font-size: 11px;
   }
 
-  /* 3. Usage Activity Heatmap (Image 2 Right Card) */
+  /* 3. Usage Activity Heatmap */
   .heatmap-nav {
     display: flex;
     align-items: center;
@@ -415,7 +415,7 @@
     display: inline-block;
   }
 
-  /* ================= QUOTA CARDS GRID (IMAGE 1 STYLE IN DASHBOARD) ================= */
+  /* Quota Cards Grid */
   .quota-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
@@ -503,7 +503,7 @@
     transition: width 0.3s ease;
   }
 
-  /* ================= RESET TIMELINE & MOST USED MODELS ================= */
+  /* Reset Timeline & Most Used Models */
   .bottom-two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -586,7 +586,7 @@
     margin-left: 6px;
   }
 
-  /* Mission Control & Analytics styles */
+  /* Mission Control & Analytics */
   .seg-group {
     display: inline-flex;
     background: #202025;
@@ -660,50 +660,50 @@
 
   <div class="top-header">
     <div class="brand-title">
-      <h1>🚀 AG Usage & Unified AI Monitor</h1>
-      <span class="sys-badge" id="sysInfo">Loading...</span>
+      <h1>🚀 AG Usage & Monitor de IA Unificado</h1>
+      <span class="sys-badge" id="sysInfo">Carregando...</span>
     </div>
     <div class="nav-tabs">
-      <button class="nav-btn active" id="tabBtnAg" onclick="switchTab('ag-dashboard')">🚀 AG Usage Dashboard</button>
-      <button class="nav-btn" id="tabBtnMission" onclick="switchTab('mission')">⚡ Token Mission Control</button>
-      <button class="nav-btn" id="tabBtnAnalytics" onclick="switchTab('analytics')">📊 Charts & Export</button>
-      <button class="nav-btn" onclick="post('syncNow')" title="Pull latest extension & Antigravity configs from GitHub">☁ Sync</button>
-      <button class="nav-btn" onclick="post('pushSync')" title="Push local changes & configs to GitHub">⬆ Push</button>
-      <button class="nav-btn" onclick="post('refresh')">↻ Refresh</button>
+      <button class="nav-btn active" id="tabBtnAg" onclick="switchTab('ag-dashboard')">🚀 Painel AG Usage</button>
+      <button class="nav-btn" id="tabBtnMission" onclick="switchTab('mission')">⚡ Controle de Missão</button>
+      <button class="nav-btn" id="tabBtnAnalytics" onclick="switchTab('analytics')">📊 Gráficos e Exportação</button>
+      <button class="nav-btn" onclick="post('syncNow')" title="Baixar atualizações mais recentes da extensão e configurações do GitHub">☁ Sincronizar</button>
+      <button class="nav-btn" onclick="post('pushSync')" title="Enviar alterações locais e configurações para o GitHub">⬆ Enviar</button>
+      <button class="nav-btn" onclick="post('refresh')">↻ Atualizar</button>
       <button class="nav-btn" onclick="post('openSettings')">⚙</button>
     </div>
   </div>
 
-  <!-- ==================== TAB 1: AG USAGE DASHBOARD (IMAGE 2) ==================== -->
+  <!-- ==================== TAB 1: PAINEL AG USAGE ==================== -->
   <div class="view-pane active" id="paneAgDashboard">
 
-    <!-- Top Plan & Credits Row -->
+    <!-- Linha Superior de Planos e Créditos -->
     <div class="plan-credits-row" id="planCreditsRow"></div>
 
-    <!-- 3-Column Hero Showcase (Exact Match to Image 2: SERVICE HEALTH | GEMINI SPARKLINE | USAGE ACTIVITY) -->
+    <!-- 3 Colunas Hero Showcase (SAÚDE DOS SERVIÇOS | SPARKLINE | MAPA DE ATIVIDADE) -->
     <div class="ag-showcase-container">
 
-      <!-- Column 1: SERVICE HEALTH -->
+      <!-- Coluna 1: SAÚDE DOS SERVIÇOS -->
       <div class="showcase-card">
         <div class="showcase-header">
-          <span class="showcase-title">SERVICE HEALTH</span>
+          <span class="showcase-title">SAÚDE DOS SERVIÇOS</span>
           <span style="font-size:10px;color:#9ca3af;">24h</span>
         </div>
         <div class="showcase-inner-box">
           <a class="public-status-link" href="https://statusgator.com/services/google-antigravity" target="_blank">
-            <span>PUBLIC STATUS</span>
+            <span>STATUS PÚBLICO</span>
             <span>→</span>
           </a>
           <div class="health-svg-wrap" id="serviceHealthSvg"></div>
         </div>
         <div class="health-legend">
-          <span><i class="h-dot h-up"></i>Service up</span>
-          <span><i class="h-dot h-warn"></i>Possible outage</span>
-          <span><i class="h-dot h-down"></i>Likely outage</span>
+          <span><i class="h-dot h-up"></i>Serviço ativo</span>
+          <span><i class="h-dot h-warn"></i>Possível instabilidade</span>
+          <span><i class="h-dot h-down"></i>Instabilidade provável</span>
         </div>
       </div>
 
-      <!-- Column 2: GEMINI / ARGON / CODEX / CLAUDE TREND SPARKLINE -->
+      <!-- Coluna 2: GEMINI / ARGON / CODEX / CLAUDE SPARKLINE -->
       <div class="showcase-card">
         <div class="showcase-header">
           <span class="showcase-title" id="sparkCardTitle">GEMINI</span>
@@ -717,17 +717,17 @@
         <div class="showcase-inner-box">
           <div class="sparkline-svg-wrap" id="sparklineSvgWrap"></div>
           <div class="expand-btn-row" onclick="toggleSparkHistory()">
-            <span id="sparkExpandLabel">EXPAND</span>
+            <span id="sparkExpandLabel">EXPANDIR</span>
             <span id="sparkExpandIcon">∨</span>
           </div>
           <div class="spark-history-drawer" id="sparkHistoryDrawer"></div>
         </div>
       </div>
 
-      <!-- Column 3: USAGE ACTIVITY HEATMAP -->
+      <!-- Coluna 3: ATIVIDADE DE USO -->
       <div class="showcase-card">
         <div class="showcase-header">
-          <span class="showcase-title">USAGE ACTIVITY</span>
+          <span class="showcase-title">ATIVIDADE DE USO</span>
           <div class="heatmap-nav">
             <button class="hm-arrow" onclick="changeMonth(-1)">‹</button>
             <span class="hm-month-label" id="hmMonthTitle">NOV 2026</span>
@@ -736,22 +736,22 @@
         </div>
         <div class="hm-calendar-wrap" id="heatmapCalendarWrap"></div>
         <div class="hm-legend-bottom">
-          <span>Less</span>
+          <span>Menos</span>
           <i class="hm-legend-sq" style="background:#26262c"></i>
           <i class="hm-legend-sq" style="background:#1f4d33"></i>
           <i class="hm-legend-sq" style="background:#266f46"></i>
           <i class="hm-legend-sq" style="background:#34a861"></i>
           <i class="hm-legend-sq" style="background:#4ade80"></i>
-          <span>More</span>
+          <span>Mais</span>
         </div>
       </div>
 
     </div>
 
-    <!-- Current Model Quotas Grid (Image 1 Style Cards for GEMINI, ARGON, CODEX, CLAUDE) -->
+    <!-- Grid de Cotas dos Modelos -->
     <div class="quota-cards-grid" id="agQuotaCardsGrid"></div>
 
-    <!-- Reset Timeline & Most Used Models -->
+    <!-- Linha do Tempo de Reinício e Modelos Mais Utilizados -->
     <div class="bottom-two-col">
       <div class="showcase-card" id="resetTimelineCard" style="min-height:auto;"></div>
       <div class="showcase-card" id="mostUsedModelsCard" style="min-height:auto;"></div>
@@ -759,15 +759,15 @@
 
   </div>
 
-  <!-- ==================== TAB 2: TOKEN MISSION CONTROL ==================== -->
+  <!-- ==================== TAB 2: CONTROLE DE MISSÃO ==================== -->
   <div class="view-pane" id="paneMission">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <span class="showcase-title">TOKEN TELEMETRY & WORKSPACE BREAKDOWN</span>
+      <span class="showcase-title">TELEMETRIA DE TOKENS & DETALHAMENTO DO WORKSPACE</span>
       <div class="seg-group">
         <button class="seg-btn" data-win="day" onclick="setWindow('day')">24h</button>
-        <button class="seg-btn" data-win="week" onclick="setWindow('week')">7 Days</button>
-        <button class="seg-btn" data-win="month" onclick="setWindow('month')">30 Days</button>
-        <button class="seg-btn active" data-win="all" onclick="setWindow('all')">All (90d)</button>
+        <button class="seg-btn" data-win="week" onclick="setWindow('week')">7 Dias</button>
+        <button class="seg-btn" data-win="month" onclick="setWindow('month')">30 Dias</button>
+        <button class="seg-btn active" data-win="all" onclick="setWindow('all')">Tudo (90d)</button>
       </div>
     </div>
 
@@ -775,8 +775,8 @@
 
     <div class="showcase-card" style="min-height:auto;">
       <div class="showcase-header">
-        <span class="showcase-title">30-DAY DAILY TOKEN ACTIVITY (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)</span>
-        <span class="q-models-tag" id="dailyPeakLabel">Peak: 0</span>
+        <span class="showcase-title">ATIVIDADE DIÁRIA DE TOKENS EM 30 DIAS (ANTIGRAVITY + GEMINI + CODEX + CLAUDE)</span>
+        <span class="q-models-tag" id="dailyPeakLabel">Pico: 0</span>
       </div>
       <div id="dailySvgContainer" style="width:100%;height:120px;"></div>
     </div>
@@ -784,17 +784,17 @@
     <div class="bottom-two-col" id="agentCardsGrid"></div>
   </div>
 
-  <!-- ==================== TAB 3: CHARTS & ANALYTICS ==================== -->
+  <!-- ==================== TAB 3: GRÁFICOS E EXPORTAÇÃO ==================== -->
   <div class="view-pane" id="paneAnalytics">
     <div class="filter-bar">
       <div class="seg-group">
-        <button class="seg-btn active" id="subTabModel" onclick="setAnalyticsMode('model')">By Model</button>
-        <button class="seg-btn" id="subTabToken" onclick="setAnalyticsMode('token')">By Token & Query</button>
-        <button class="seg-btn" id="subTabProject" onclick="setAnalyticsMode('project')">By Workspace</button>
+        <button class="seg-btn active" id="subTabModel" onclick="setAnalyticsMode('model')">Por Modelo</button>
+        <button class="seg-btn" id="subTabToken" onclick="setAnalyticsMode('token')">Por Token & Requisição</button>
+        <button class="seg-btn" id="subTabProject" onclick="setAnalyticsMode('project')">Por Workspace</button>
       </div>
       <div>
         <select id="analyticsSource" onchange="renderAnalytics()">
-          <option value="all">All Agents (Antigravity + Codex + Claude)</option>
+          <option value="all">Todos os Agentes (Antigravity + Codex + Claude)</option>
           <option value="antigravity">Antigravity & Gemini / Argon</option>
           <option value="codex">OpenAI Codex / Astra / Luna</option>
           <option value="claude">Claude Code</option>
@@ -802,14 +802,14 @@
       </div>
       <div>
         <select id="analyticsChartType" onchange="renderAnalytics()">
-          <option value="bar">Bar Chart</option>
-          <option value="doughnut">Doughnut / Pie Chart</option>
+          <option value="bar">Gráfico de Barras</option>
+          <option value="doughnut">Gráfico de Rosca / Pizza</option>
         </select>
       </div>
       <div>
         <input type="date" id="dateStart" onchange="renderAnalytics()">
         <input type="date" id="dateEnd" onchange="renderAnalytics()">
-        <button class="nav-btn" onclick="resetDates()">Reset</button>
+        <button class="nav-btn" onclick="resetDates()">Redefinir</button>
       </div>
       <div style="margin-left:auto;display:flex;gap:6px;">
         <button class="nav-btn" onclick="exportChartPNG()">📥 PNG</button>
@@ -821,7 +821,7 @@
     <div class="summary-tiles" id="analyticsTiles"></div>
     <div class="chart-box"><canvas id="analyticsCanvas"></canvas></div>
     <div class="showcase-card" style="min-height:auto;">
-      <div class="showcase-header"><span class="showcase-title">DETAILED BREAKDOWN</span></div>
+      <div class="showcase-header"><span class="showcase-title">DETALHAMENTO DETALHADO</span></div>
       <div id="analyticsTableWrap"></div>
     </div>
   </div>
@@ -836,6 +836,11 @@
   let hmYear = new Date().getFullYear();
   let analyticsMode = 'model';
   let chartInstance = null;
+
+  // Persist current active tab across refreshes
+  const previousState = vscode.getState() || {};
+  let currentTab = previousState.currentTab || 'ag-dashboard';
+  let hasInitializedTab = false;
 
   function post(type, extra = {}) {
     vscode.postMessage({ type, ...extra });
@@ -878,15 +883,23 @@
     return `${hh}:${mm}`;
   }
 
-  function switchTab(tab) {
+  function switchTab(tab, notifyHost = true) {
+    currentTab = tab;
+    vscode.setState({ ...vscode.getState(), currentTab: tab });
+
     document.getElementById('tabBtnAg').classList.toggle('active', tab === 'ag-dashboard');
     document.getElementById('tabBtnMission').classList.toggle('active', tab === 'mission');
     document.getElementById('tabBtnAnalytics').classList.toggle('active', tab === 'analytics');
     document.getElementById('paneAgDashboard').classList.toggle('active', tab === 'ag-dashboard');
     document.getElementById('paneMission').classList.toggle('active', tab === 'mission');
     document.getElementById('paneAnalytics').classList.toggle('active', tab === 'analytics');
+
     if (tab === 'analytics' && currentData) {
       setTimeout(() => renderAnalytics(), 50);
+    }
+
+    if (notifyHost) {
+      post('tabChanged', { tab });
     }
   }
 
@@ -902,7 +915,7 @@
   function toggleSparkHistory() {
     sparkHistoryOpen = !sparkHistoryOpen;
     document.getElementById('sparkHistoryDrawer').classList.toggle('open', sparkHistoryOpen);
-    document.getElementById('sparkExpandLabel').textContent = sparkHistoryOpen ? 'COLLAPSE' : 'EXPAND';
+    document.getElementById('sparkExpandLabel').textContent = sparkHistoryOpen ? 'RECOLHER' : 'EXPANDIR';
     document.getElementById('sparkExpandIcon').textContent = sparkHistoryOpen ? '∧' : '∨';
   }
 
@@ -913,7 +926,7 @@
     renderHeatmapBox();
   }
 
-  /* ================= 1. RENDER AG USAGE DASHBOARD (IMAGE 2) ================= */
+  /* ================= 1. RENDERIZAR PAINEL AG USAGE ================= */
   function renderAgDashboard() {
     const d = currentData;
     if (!d) return;
@@ -928,22 +941,22 @@
     document.getElementById('planCreditsRow').innerHTML = `
       <a class="ag-card plan-pill-card" href="https://antigravity.google/docs/plans" target="_blank">
         <div>
-          <div class="plan-label">Antigravity & Gemini Plan</div>
+          <div class="plan-label">Plano Antigravity & Gemini</div>
           <div class="plan-name">${agPlan}</div>
         </div>
-        <span style="color:#4ade80;font-size:12px;font-weight:700;">Active →</span>
+        <span style="color:#4ade80;font-size:12px;font-weight:700;">Ativo →</span>
       </a>
       <div class="ag-card plan-pill-card">
         <div>
           <div class="plan-label">OpenAI Codex & Claude</div>
-          <div class="plan-name">CODEX ${cxPlan} · CLAUDE READY</div>
+          <div class="plan-name">CODEX ${cxPlan} · CLAUDE PRONTO</div>
         </div>
-        <span style="color:#4ade80;font-size:12px;font-weight:700;">Connected</span>
+        <span style="color:#4ade80;font-size:12px;font-weight:700;">Conectado</span>
       </div>
       <div class="ag-card plan-pill-card">
         <div>
-          <div class="plan-label">Extra Credits</div>
-          <div class="plan-name">Available Balance</div>
+          <div class="plan-label">Créditos Extras</div>
+          <div class="plan-name">Saldo Disponível</div>
         </div>
         <span class="credits-value">${credits.toLocaleString()}</span>
       </div>
@@ -960,7 +973,6 @@
   function renderServiceHealthBox() {
     let pts = currentData?.publicHealth?.healthPoints || [];
     if (!pts || pts.length === 0) {
-      // Fallback 28-bar 24h status visualization when offline
       const sampleHeights = [22,14,28,16,58,15,18,24,14,32,20,66,18,14,22,26,74,16,14,25,30,18,62,19,16,32,18,22];
       pts = sampleHeights.map((v, idx) => ({
         timestamp: Date.now() - (28 - idx) * 30 * 60000,
@@ -986,7 +998,7 @@
       const x = i * (barW + barGap);
       const y = h - bh;
       const color = p.status === 2 ? '#ef4444' : p.status === 1 ? '#f59e0b' : '#4ade80';
-      const statusTxt = p.status === 2 ? 'Likely outage' : p.status === 1 ? 'Possible outage' : 'Service up';
+      const statusTxt = p.status === 2 ? 'Instabilidade provável' : p.status === 1 ? 'Possível instabilidade' : 'Serviço ativo';
       const timeStr = new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${color}">
         <title>${timeStr} — ${statusTxt}</title>
@@ -1065,7 +1077,7 @@
       const prev = Math.round((p.previousQuota ?? p.currentQuota) * 100);
       const cur = Math.round(p.currentQuota * 100);
       const delta = cur - prev;
-      const deltaStr = delta === 0 ? ' Steady' : (delta > 0 ? `+${delta}%` : `${delta}%`);
+      const deltaStr = delta === 0 ? ' Estável' : (delta > 0 ? `+${delta}%` : `${delta}%`);
       const tStr = new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       return `<div class="hist-entry">
         <span style="color:#9ca3af">${tStr}</span>
@@ -1077,7 +1089,7 @@
   }
 
   function renderHeatmapBox() {
-    const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const monthNames = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
     document.getElementById('hmMonthTitle').textContent = `${monthNames[hmMonth]} ${hmYear}`;
 
     const dailyArr = currentData?.dailyActivity || [];
@@ -1086,15 +1098,15 @@
 
     const firstDay = new Date(hmYear, hmMonth, 1);
     const lastDay = new Date(hmYear, hmMonth + 1, 0);
-    const startOffset = (firstDay.getDay() + 6) % 7; // Monday = 0
+    const startOffset = (firstDay.getDay() + 6) % 7; // Segunda = 0
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - startOffset);
 
     const todayIso = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
 
     let rowsHtml = `<div class="hm-weekdays">
-      <div class="hm-wd">M</div><div class="hm-wd">T</div><div class="hm-wd">W</div>
-      <div class="hm-wd">T</div><div class="hm-wd">F</div><div class="hm-wd">S</div><div class="hm-wd">S</div>
+      <div class="hm-wd">S</div><div class="hm-wd">T</div><div class="hm-wd">Q</div>
+      <div class="hm-wd">Q</div><div class="hm-wd">S</div><div class="hm-wd">S</div><div class="hm-wd">D</div>
     </div>`;
 
     for (let week = 0; week < 5; week++) {
@@ -1121,8 +1133,8 @@
         ].filter(Boolean).join(' ');
 
         const tip = tok > 0
-          ? `${iso}: ${fmt(tok)} tokens (${info.requests || 0} turns)`
-          : `${iso}: No recorded activity`;
+          ? `${iso}: ${fmt(tok)} tokens (${info.requests || 0} turnos)`
+          : `${iso}: Nenhuma atividade registrada`;
         cells += `<div class="${cls}" title="${tip}"></div>`;
       }
       rowsHtml += `<div class="hm-week-row">${cells}</div>`;
@@ -1157,7 +1169,7 @@
               <span class="q-pct-big" style="color:#9ca3af;font-size:18px;">—</span>
               <div class="q-meta-right">
                 <span class="q-win-label">5h</span>
-                <span class="q-reset-str">Not applicable</span>
+                <span class="q-reset-str">Não aplicável</span>
               </div>
             </div>
             <div class="q-bar-track">
@@ -1171,9 +1183,9 @@
         const pct = Math.round(Math.max(0, Math.min(1, b.quota ?? 1)) * 100);
         const color = pctColor(pct);
         const isWk = String(b.window || '').toLowerCase() === 'weekly';
-        const winLbl = isWk ? 'Weekly' : '5h';
+        const winLbl = isWk ? 'Semanal' : '5h';
         const diff = (b.resetTime || 0) - Date.now();
-        const relStr = diff > 0 ? fmtRelMs(diff) : 'Active';
+        const relStr = diff > 0 ? fmtRelMs(diff) : 'Ativo';
         const absStr = diff > 0 ? fmtAbsTime(b.resetTime, diff) : '';
 
         return `
@@ -1196,7 +1208,7 @@
         <div class="q-card">
           <div class="q-card-header">
             <span class="q-card-title">${cat}</span>
-            <span class="q-models-tag" title="${modelsTip}">${modelsCount} model${modelsCount === 1 ? '' : 's'}</span>
+            <span class="q-models-tag" title="${modelsTip}">${modelsCount} modelo${modelsCount === 1 ? '' : 's'}</span>
           </div>
           ${bucketsHtml}
         </div>
@@ -1212,7 +1224,7 @@
     const colors = { Gemini: '#38bdf8', Argon: '#818cf8', Codex: '#4ade80', Claude: '#fbbf24' };
 
     const dayHeaders = [];
-    const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const dayNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
     for (let i = 0; i < 7; i++) {
       const dt = new Date(now + i * 86400000);
       dayHeaders.push(`
@@ -1234,18 +1246,18 @@
 
     const dotsHtml = events.map((e, idx) => {
       const rel = fmtRelMs(Math.max(0, e.rTime - now));
-      return `<div class="tl-dot" style="left:${(e.posPct + idx * 2.5).toFixed(1)}%;background:${e.color}" title="${e.cat} resets in ${rel}"></div>`;
+      return `<div class="tl-dot" style="left:${(e.posPct + idx * 2.5).toFixed(1)}%;background:${e.color}" title="${e.cat} reinicia em ${rel}"></div>`;
     }).join('');
 
     const legendHtml = events.map((e) => {
       const rel = fmtRelMs(Math.max(0, e.rTime - now));
-      return `<span style="color:${e.color};font-weight:700;">● ${e.cat} <span style="color:#9ca3af;font-weight:500;">(in ${rel})</span></span>`;
+      return `<span style="color:${e.color};font-weight:700;">● ${e.cat} <span style="color:#9ca3af;font-weight:500;">(em ${rel})</span></span>`;
     }).join('');
 
     document.getElementById('resetTimelineCard').innerHTML = `
       <div class="showcase-header">
-        <span class="showcase-title">RESET TIMELINE</span>
-        <span style="font-size:11px;color:#9ca3af;">7-Day Window</span>
+        <span class="showcase-title">LINHA DO TEMPO DE REINÍCIO</span>
+        <span style="font-size:11px;color:#9ca3af;">Janela de 7 Dias</span>
       </div>
       <div class="timeline-days">${dayHeaders.join('')}</div>
       <div class="tl-track">
@@ -1265,7 +1277,7 @@
     ].sort((a, b) => b.total - a.total);
 
     if (!allModels.some(m => m.family === 'Claude')) {
-      allModels.push({ name: 'claude-sonnet-5.5', total: 0, requests: 0, family: 'Claude Ready', color: '#fbbf24' });
+      allModels.push({ name: 'claude-sonnet-5.5', total: 0, requests: 0, family: 'Claude Pronto', color: '#fbbf24' });
     }
 
     const grandTot = Math.max(1, allModels.reduce((s, m) => s + (m.total || 0), 0));
@@ -1281,7 +1293,7 @@
               <span class="model-pill-badge">${m.family}</span>
             </div>
             <span class="mono" style="font-size:12px;font-weight:700;">
-              ${fmt(m.total)} <span style="color:#9ca3af;font-weight:500;">(${m.requests || 0} turns · ${share}%)</span>
+              ${fmt(m.total)} <span style="color:#9ca3af;font-weight:500;">(${m.requests || 0} turnos · ${share}%)</span>
             </span>
           </div>
           <div class="q-bar-track" style="height:4px;">
@@ -1293,14 +1305,14 @@
 
     document.getElementById('mostUsedModelsCard').innerHTML = `
       <div class="showcase-header">
-        <span class="showcase-title">MOST USED MODELS</span>
-        <span style="font-size:11px;color:#9ca3af;">${totalTurns.toLocaleString()} turns · ${fmt(grandTot)} tokens</span>
+        <span class="showcase-title">MODELOS MAIS UTILIZADOS</span>
+        <span style="font-size:11px;color:#9ca3af;">${totalTurns.toLocaleString()} turnos · ${fmt(grandTot)} tokens</span>
       </div>
       ${rowsHtml}
     `;
   }
 
-  /* ================= 2. TOKEN MISSION CONTROL ================= */
+  /* ================= 2. CONTROLE DE MISSÃO DE TOKENS ================= */
   function setWindow(win) {
     currentWin = win;
     document.querySelectorAll('[data-win]').forEach(btn => {
@@ -1324,10 +1336,10 @@
     const totalRequests = (agW.totals?.requests || 0) + (cxW.totals?.requests || 0) + (clW.totals?.requests || 0);
 
     document.getElementById('summaryTiles').innerHTML = `
-      <div class="tile"><div class="tile-label">Combined Total Tokens</div><div class="tile-value">${fmt(grandTotal)}</div><div class="tile-sub">${totalRequests.toLocaleString()} model turns</div></div>
-      <div class="tile"><div class="tile-label">Antigravity & Gemini (Argon)</div><div class="tile-value" style="color:#38bdf8">${fmt(agTot)}</div><div class="tile-sub">${d.antigravity?.sessions || 0} active workspaces</div></div>
-      <div class="tile"><div class="tile-label">OpenAI Codex (Astra / Luna)</div><div class="tile-value" style="color:#4ade80">${fmt(cxTot)}</div><div class="tile-sub">${d.codex?.sessions || 0} sessions</div></div>
-      <div class="tile"><div class="tile-label">Claude Code</div><div class="tile-value" style="color:#fbbf24">${fmt(clTot)}</div><div class="tile-sub">${clTot > 0 ? (d.claude?.sessions + ' sessions') : 'Ready for ~/.claude logs'}</div></div>
+      <div class="tile"><div class="tile-label">Total Combinado de Tokens</div><div class="tile-value">${fmt(grandTotal)}</div><div class="tile-sub">${totalRequests.toLocaleString()} turnos de modelos</div></div>
+      <div class="tile"><div class="tile-label">Antigravity & Gemini (Argon)</div><div class="tile-value" style="color:#38bdf8">${fmt(agTot)}</div><div class="tile-sub">${d.antigravity?.sessions || 0} workspaces ativos</div></div>
+      <div class="tile"><div class="tile-label">OpenAI Codex (Astra / Luna)</div><div class="tile-value" style="color:#4ade80">${fmt(cxTot)}</div><div class="tile-sub">${d.codex?.sessions || 0} sessões</div></div>
+      <div class="tile"><div class="tile-label">Claude Code</div><div class="tile-value" style="color:#fbbf24">${fmt(clTot)}</div><div class="tile-sub">${clTot > 0 ? (d.claude?.sessions + ' sessões') : 'Pronto para logs de ~/.claude'}</div></div>
     `;
 
     const agMap = new Map((d.antigravity?.windows?.month?.byDay || []).map(x => [x.day, x.total]));
@@ -1344,7 +1356,7 @@
       const sum = (agMap.get(k) || 0) + (cxMap.get(k) || 0) + (clMap.get(k) || 0);
       if (sum > maxDay) maxDay = sum;
     }
-    document.getElementById('dailyPeakLabel').textContent = `Peak Day: ${fmt(maxDay)}`;
+    document.getElementById('dailyPeakLabel').textContent = `Pico Diário: ${fmt(maxDay)}`;
 
     const barW = 100 / dayKeys.length;
     let rects = '';
@@ -1383,31 +1395,31 @@
         <span class="q-models-tag">${fmt(t.total || 0)} tokens</span>
       </div>
       <table>
-        <thead><tr><th>Model</th><th class="num">Input+Cache</th><th class="num">Output</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>Modelo</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead>
         <tbody>
           ${models.length ? models.map(tk => `<tr>
             <td class="mono">${tk.name}</td>
             <td class="num">${fmt((tk.input || 0) + (tk.cacheRead || 0) + (tk.cacheWrite || 0))}</td>
             <td class="num">${fmt(tk.output || 0)}</td>
             <td class="num"><strong>${fmt(tk.total || 0)}</strong></td>
-          </tr>`).join('') : `<tr><td colspan="4" style="color:#9ca3af">No activity in this window</td></tr>`}
+          </tr>`).join('') : `<tr><td colspan="4" style="color:#9ca3af">Nenhuma atividade nesta janela</td></tr>`}
         </tbody>
       </table>
-      <div style="font-size:10px;font-weight:700;margin-top:12px;color:#9ca3af;">TOP WORKSPACES</div>
+      <div style="font-size:10px;font-weight:700;margin-top:12px;color:#9ca3af;">PRINCIPAIS WORKSPACES</div>
       <table>
-        <thead><tr><th>Workspace</th><th class="num">Turns</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>Workspace</th><th class="num">Turnos</th><th class="num">Total</th></tr></thead>
         <tbody>
           ${projects.length ? projects.map(p => `<tr>
             <td class="mono">${p.name}</td>
             <td class="num">${p.requests || 0}</td>
             <td class="num"><strong>${fmt(p.total || 0)}</strong></td>
-          </tr>`).join('') : `<tr><td colspan="3" style="color:#9ca3af">No workspaces</td></tr>`}
+          </tr>`).join('') : `<tr><td colspan="3" style="color:#9ca3af">Nenhum workspace</td></tr>`}
         </tbody>
       </table>
     </div>`;
   }
 
-  /* ================= 3. CHARTS & ANALYTICS ================= */
+  /* ================= 3. GRÁFICOS E EXPORTAÇÃO ================= */
   function setAnalyticsMode(mode) {
     analyticsMode = mode;
     document.getElementById('subTabModel').classList.toggle('active', mode === 'model');
@@ -1452,7 +1464,7 @@
       totalOut += (output || 0);
       totalTurns += (requests || 1);
 
-      const mKey = model || 'unknown';
+      const mKey = model || 'desconhecido';
       if (!byModel[mKey]) byModel[mKey] = { input: 0, output: 0, total: 0, reqs: 0 };
       byModel[mKey].input += inCombined;
       byModel[mKey].output += (output || 0);
@@ -1468,14 +1480,16 @@
     }
 
     document.getElementById('analyticsTiles').innerHTML = `
-      <div class="tile"><div class="tile-label">Input + Cache Tokens</div><div class="tile-value">${fmt(totalIn)}</div></div>
-      <div class="tile"><div class="tile-label">Output Tokens</div><div class="tile-value" style="color:#38bdf8">${fmt(totalOut)}</div></div>
-      <div class="tile"><div class="tile-label">Combined Total</div><div class="tile-value" style="color:#818cf8">${fmt(totalIn + totalOut)}</div></div>
-      <div class="tile"><div class="tile-label">Total Turns</div><div class="tile-value" style="color:#facc15">${totalTurns.toLocaleString()}</div></div>
+      <div class="tile"><div class="tile-label">Tokens de Entrada + Cache</div><div class="tile-value">${fmt(totalIn)}</div></div>
+      <div class="tile"><div class="tile-label">Tokens de Saída</div><div class="tile-value" style="color:#38bdf8">${fmt(totalOut)}</div></div>
+      <div class="tile"><div class="tile-label">Total Combinado</div><div class="tile-value" style="color:#818cf8">${fmt(totalIn + totalOut)}</div></div>
+      <div class="tile"><div class="tile-label">Total de Turnos</div><div class="tile-value" style="color:#facc15">${totalTurns.toLocaleString()}</div></div>
     `;
 
     const palette = ['#4ade80', '#38bdf8', '#818cf8', '#fbbf24', '#f87171', '#a78bfa'];
-    const ctx = document.getElementById('analyticsCanvas').getContext('2d');
+    const canvas = document.getElementById('analyticsCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     if (chartInstance) chartInstance.destroy();
 
     let labels = [], datasets = [], tableHtml = '';
@@ -1483,27 +1497,27 @@
       const entries = Object.entries(byModel).sort((a, b) => b[1].total - a[1].total);
       labels = entries.map(e => e[0]);
       datasets = chartType === 'doughnut'
-        ? [{ label: 'Total Tokens', data: entries.map(e => e[1].total), backgroundColor: palette }]
+        ? [{ label: 'Total de Tokens', data: entries.map(e => e[1].total), backgroundColor: palette }]
         : [
-            { label: 'Input + Cache', data: entries.map(e => e[1].input), backgroundColor: '#38bdf8' },
-            { label: 'Output', data: entries.map(e => e[1].output), backgroundColor: '#4ade80' }
+            { label: 'Entrada + Cache', data: entries.map(e => e[1].input), backgroundColor: '#38bdf8' },
+            { label: 'Saída', data: entries.map(e => e[1].output), backgroundColor: '#4ade80' }
           ];
-      tableHtml = `<table><thead><tr><th>Model</th><th class="num">Turns</th><th class="num">Input+Cache</th><th class="num">Output</th><th class="num">Total</th></tr></thead><tbody>` +
+      tableHtml = `<table><thead><tr><th>Modelo</th><th class="num">Turnos</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead><tbody>` +
         entries.map(([k, v]) => `<tr><td class="mono">${k}</td><td class="num">${v.reqs}</td><td class="num">${v.input.toLocaleString()}</td><td class="num">${v.output.toLocaleString()}</td><td class="num"><strong>${v.total.toLocaleString()}</strong></td></tr>`).join('') +
         `</tbody></table>`;
     } else if (analyticsMode === 'token') {
-      labels = ['Input + Cache Tokens', 'Output Tokens', 'Combined Total'];
+      labels = ['Tokens de Entrada + Cache', 'Tokens de Saída', 'Total Combinado'];
       datasets = [{ label: 'Tokens', data: [totalIn, totalOut, totalIn + totalOut], backgroundColor: ['#38bdf8', '#4ade80', '#818cf8'] }];
-      tableHtml = `<table><thead><tr><th>Metric</th><th class="num">Value</th></tr></thead><tbody>
-        <tr><td>Input + Cache Tokens</td><td class="num">${totalIn.toLocaleString()}</td></tr>
-        <tr><td>Output Tokens</td><td class="num">${totalOut.toLocaleString()}</td></tr>
-        <tr><td>Combined Total Tokens</td><td class="num"><strong>${(totalIn + totalOut).toLocaleString()}</strong></td></tr>
+      tableHtml = `<table><thead><tr><th>Métrica</th><th class="num">Valor</th></tr></thead><tbody>
+        <tr><td>Tokens de Entrada + Cache</td><td class="num">${totalIn.toLocaleString()}</td></tr>
+        <tr><td>Tokens de Saída</td><td class="num">${totalOut.toLocaleString()}</td></tr>
+        <tr><td>Total Combinado de Tokens</td><td class="num"><strong>${(totalIn + totalOut).toLocaleString()}</strong></td></tr>
       </tbody></table>`;
     } else {
       const entries = Object.entries(byProject).sort((a, b) => b[1].total - a[1].total);
       labels = entries.map(e => e[0]);
-      datasets = [{ label: 'Total Workspace Tokens', data: entries.map(e => e[1].total), backgroundColor: palette }];
-      tableHtml = `<table><thead><tr><th>Workspace</th><th class="num">Turns</th><th class="num">Input+Cache</th><th class="num">Output</th><th class="num">Total</th></tr></thead><tbody>` +
+      datasets = [{ label: 'Total de Tokens por Workspace', data: entries.map(e => e[1].total), backgroundColor: palette }];
+      tableHtml = `<table><thead><tr><th>Workspace</th><th class="num">Turnos</th><th class="num">Entrada+Cache</th><th class="num">Saída</th><th class="num">Total</th></tr></thead><tbody>` +
         entries.map(([k, v]) => `<tr><td class="mono">${k}</td><td class="num">${v.reqs}</td><td class="num">${v.input.toLocaleString()}</td><td class="num">${v.output.toLocaleString()}</td><td class="num"><strong>${v.total.toLocaleString()}</strong></td></tr>`).join('') +
         `</tbody></table>`;
     }
@@ -1531,7 +1545,7 @@
 
   function exportAnalyticsCSV() {
     const buckets = getFilteredBuckets();
-    const lines = ['Timestamp,ISO_Date,Model,Project,Input_Tokens,Cache_Read_Tokens,Output_Tokens,Turns'];
+    const lines = ['Timestamp,Data_ISO,Modelo,Projeto,Tokens_Entrada,Tokens_Cache_Leitura,Tokens_Saida,Turnos'];
     for (const r of buckets) {
       const [ts, model, project, input, cacheRead, , output, , requests] = r;
       lines.push(`${ts},${new Date(ts).toISOString()},"${model}","${project}",${input||0},${cacheRead||0},${output||0},${requests||1}`);
@@ -1548,8 +1562,22 @@
       }
       renderAgDashboard();
       renderMissionControl();
-      if (msg.activeTab) {
-        switchTab(msg.activeTab);
+
+      // If user is currently looking at the analytics tab, refresh the chart/table smoothly with new data!
+      if (currentTab === 'analytics') {
+        renderAnalytics();
+      }
+
+      // Tab preservation:
+      // If forceTab is explicitly set (e.g. from a user command), switch to it.
+      // Otherwise, ALWAYS preserve currentTab so background refreshes never throw the user back!
+      if (msg.forceTab && msg.activeTab) {
+        switchTab(msg.activeTab, false);
+      } else if (!hasInitializedTab) {
+        hasInitializedTab = true;
+        switchTab(currentTab || msg.activeTab || 'ag-dashboard', false);
+      } else {
+        switchTab(currentTab, false);
       }
     }
   });
