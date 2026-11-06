@@ -16,5 +16,8 @@
   "editor.inlineSuggest.enabled": true,
   "editor.codeLens": true,
   "chat.disableAIFeatures": true,
-  "unifiedUsage.autoSyncGitHub": true
+  "unifiedUsage.autoSyncGitHub": true,
+  "claudeCode.hideOnboarding": true,
+  "claudeCode.preferredLocation": "panel",
+  "editor.accessibilitySupport": "on"
 }
