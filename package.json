@@ -60,7 +60,7 @@
       },
       {
         "command": "unifiedUsage.openSettings",
-        "title": "AG Usage: Abrir Configurações",
+        "title": "AG Usage: Abrir Painel de Configurações",
         "icon": "$(gear)"
       },
       {
@@ -159,6 +159,28 @@
           "type": "boolean",
           "default": false,
           "description": "Exibir itens separados na Barra de Status para Gemini/Argon e Codex/Claude (padrão: falso, unificado em um único item)."
+        },
+        "unifiedUsage.statusBarShowTokens": {
+          "type": "boolean",
+          "default": false,
+          "description": "Exibir total acumulado de tokens diretamente na Barra de Status."
+        },
+        "unifiedUsage.statusBarModels": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["Gemini", "Argon", "Codex", "Claude"],
+          "description": "Lista dos modelos exibidos na Barra de Status."
+        },
+        "unifiedUsage.notifyOnLowQuota": {
+          "type": "boolean",
+          "default": true,
+          "description": "Exibir notificação popup no VS Code quando a cota de algum modelo estiver abaixo de 15%."
+        },
+        "unifiedUsage.chartTheme": {
+          "type": "string",
+          "enum": ["modern", "cyberpunk", "classic", "minimal"],
+          "default": "modern",
+          "description": "Tema visual e paleta de cores para os gráficos."
         },
         "unifiedUsage.autoSyncGitHub": {
           "type": "boolean",

@@ -15,6 +15,7 @@ let syncTimer;
 let lastData = null;
 let refreshing = false;
 let pendingActiveTab = 'ag-dashboard';
+let notifiedLowQuotaSet = new Set();
 
 const PROGRESS_THRESHOLDS = [10, 30, 50, 70, 90];
 const PROGRESS_COLORS = {
@@ -79,8 +80,9 @@ const I18N = {
     qmPushSyncSub: 'Exportar configurações locais, atalhos e arquivos da extensão para o GitHub',
     qmExportStats: '$(save) Exportar Dados de Uso e Histórico para JSON',
     qmExportStatsSub: 'Salvar estatísticas agregadas de tokens e cotas em arquivo JSON',
-    qmSettings: '$(gear) Configurar AG Usage & Monitor Unificado',
-    qmSettingsSub: 'Ajustar intervalo de atualização, limites de alerta e idioma'
+    qmSettings: '$(gear) Abrir Painel de Configurações',
+    qmSettingsSub: 'Ajustar visualmente limites, layout, modelos visíveis e opções',
+    savedSettingsMsg: '$(check) Configurações salvas com sucesso!'
   },
   'en': {
     notApplicable: 'Not applicable',
@@ -113,8 +115,9 @@ const I18N = {
     qmPushSyncSub: 'Export current settings, keybindings & extension files to GitHub',
     qmExportStats: '$(save) Export Full Usage Data & History to JSON',
     qmExportStatsSub: 'Save aggregated token & quota statistics to a JSON file',
-    qmSettings: '$(gear) Configure AG Usage & Unified Monitor',
-    qmSettingsSub: 'Adjust refresh interval, warning thresholds, layout and language'
+    qmSettings: '$(gear) Open Settings Dashboard',
+    qmSettingsSub: 'Visually configure thresholds, layout, visible models, and options',
+    savedSettingsMsg: '$(check) Settings saved successfully!'
   }
 };
 
@@ -365,14 +368,18 @@ function buildAgUsageHoverTooltip(data, primaryOrder) {
 function getConfig() {
   const cfg = vscode.workspace.getConfiguration('unifiedUsage');
   return {
+    language: cfg.get('language', 'pt-BR'),
+    enableStatusColors: cfg.get('enableStatusColors', true),
     refreshIntervalMinutes: cfg.get('refreshIntervalMinutes', 2),
     warnAtPercent: cfg.get('warnAtPercent', 75),
     errorAtPercent: cfg.get('errorAtPercent', 90),
     lookbackDays: cfg.get('lookbackDays', 90),
     showSeparateStatusBarItems: cfg.get('showSeparateStatusBarItems', false),
     autoSyncGitHub: cfg.get('autoSyncGitHub', true),
-    enableStatusColors: cfg.get('enableStatusColors', true),
-    language: cfg.get('language', 'pt-BR')
+    statusBarShowTokens: cfg.get('statusBarShowTokens', false),
+    statusBarModels: cfg.get('statusBarModels', ['Gemini', 'Argon', 'Codex', 'Claude']),
+    notifyOnLowQuota: cfg.get('notifyOnLowQuota', true),
+    chartTheme: cfg.get('chartTheme', 'modern')
   };
 }
 
@@ -413,6 +420,10 @@ function updateStatusBars(data) {
   const cfg = getConfig();
   const g = data.agGroups || {};
 
+  const modelsToShow = Array.isArray(cfg.statusBarModels) && cfg.statusBarModels.length > 0
+    ? cfg.statusBarModels
+    : ['Gemini', 'Argon', 'Codex', 'Claude'];
+
   const gemPct = pctInt(g.Gemini?.quota ?? 1);
   const argPct = pctInt(g.Argon?.quota ?? 1);
   const cxPct = pctInt(g.Codex?.quota ?? 1);
@@ -425,6 +436,19 @@ function updateStatusBars(data) {
 
   const agTok = formatTokens(data.antigravity?.windows?.all?.totals?.total || 0);
   const cxTok = formatTokens(data.codex?.windows?.all?.totals?.total || 0);
+  const totalTokens = formatTokens(
+    (data.antigravity?.windows?.all?.totals?.total || 0) +
+    (data.codex?.windows?.all?.totals?.total || 0) +
+    (data.claude?.windows?.all?.totals?.total || 0)
+  );
+
+  const modelParts = [];
+  if (modelsToShow.includes('Gemini')) modelParts.push(`Gemini ${gemStr}`);
+  if (modelsToShow.includes('Argon')) modelParts.push(`Argon ${argStr}`);
+  if (modelsToShow.includes('Codex')) modelParts.push(`Codex ${cxStr}`);
+  if (modelsToShow.includes('Claude')) modelParts.push(`Claude ${clStr}`);
+
+  const tokSuffix = cfg.statusBarShowTokens ? ` (${totalTokens})` : '';
 
   if (cfg.showSeparateStatusBarItems) {
     agStatusBar.text = `$(rocket) Gemini ${gemStr}   Argon ${argStr}   (${agTok})`;
@@ -439,13 +463,46 @@ function updateStatusBars(data) {
       codexStatusBar.show();
     }
   } else {
-    // UNIFIED SINGLE STATUS BAR ITEM: Gemini + Argon + Codex + Claude
-    agStatusBar.text = `$(rocket) Gemini ${gemStr} · Argon ${argStr} | Codex ${cxStr} · Claude ${clStr}`;
+    // UNIFIED SINGLE STATUS BAR ITEM
+    const textJoined = modelParts.length > 0 ? modelParts.join(' · ') : `Gemini ${gemStr} · Argon ${argStr}`;
+    agStatusBar.text = `$(rocket) ${textJoined}${tokSuffix}`;
     agStatusBar.tooltip = buildAgUsageHoverTooltip(data, ['Gemini', 'Argon', 'Codex', 'Claude']);
-    applyStatusBarColor(agStatusBar, 100 - Math.min(gemPct, argPct, cxPct, clPct), cfg);
+
+    const activePcts = [];
+    if (modelsToShow.includes('Gemini')) activePcts.push(gemPct);
+    if (modelsToShow.includes('Argon')) activePcts.push(argPct);
+    if (modelsToShow.includes('Codex')) activePcts.push(cxPct);
+    if (modelsToShow.includes('Claude')) activePcts.push(clPct);
+    const worstPct = activePcts.length > 0 ? Math.min(...activePcts) : Math.min(gemPct, argPct, cxPct, clPct);
+
+    applyStatusBarColor(agStatusBar, 100 - worstPct, cfg);
     agStatusBar.show();
     if (codexStatusBar) {
       codexStatusBar.hide();
+    }
+  }
+
+  // Low quota notification
+  if (cfg.notifyOnLowQuota) {
+    checkLowQuotaNotification(g);
+  }
+}
+
+function checkLowQuotaNotification(groups) {
+  for (const [name, g] of Object.entries(groups || {})) {
+    const q = g?.quota ?? 1;
+    if (q < 0.15 && !notifiedLowQuotaSet.has(name)) {
+      notifiedLowQuotaSet.add(name);
+      const pct = Math.round(q * 100);
+      const isPt = getConfig().language === 'pt-BR';
+      const msg = isPt
+        ? `⚠️ Alerta AG Usage: A cota do modelo ${name} está baixa (${pct}% restante)!`
+        : `⚠️ AG Usage Alert: Model ${name} quota is low (${pct}% remaining)!`;
+      vscode.window.showWarningMessage(msg, isPt ? 'Abrir Painel' : 'Open Dashboard').then((act) => {
+        if (act) vscode.commands.executeCommand('unifiedUsage.openDashboard');
+      });
+    } else if (q >= 0.20 && notifiedLowQuotaSet.has(name)) {
+      notifiedLowQuotaSet.delete(name);
     }
   }
 }
@@ -560,7 +617,8 @@ class UnifiedSidebarProvider {
       isSidebar: true,
       activeTab: pendingActiveTab,
       forceTab: false,
-      language: getConfig().language
+      language: getConfig().language,
+      settings: getConfig()
     });
   }
 }
@@ -569,6 +627,52 @@ async function handleWebviewMessage(context, msg, targetWebview) {
   const t = getT();
   if (msg.type === 'tabChanged' && msg.tab) {
     pendingActiveTab = msg.tab;
+  } else if (msg.type === 'getSettings') {
+    targetWebview.postMessage({
+      type: 'settingsData',
+      settings: getConfig()
+    });
+  } else if (msg.type === 'updateSettings' && msg.settings) {
+    const config = vscode.workspace.getConfiguration('unifiedUsage');
+    for (const [key, val] of Object.entries(msg.settings)) {
+      await config.update(key, val, vscode.ConfigurationTarget.Global);
+    }
+    const updated = getConfig();
+    scheduleRefresh(context);
+    if (lastData) updateStatusBars(lastData);
+    targetWebview.postMessage({
+      type: 'settingsUpdated',
+      settings: updated,
+      success: true
+    });
+    vscode.window.setStatusBarMessage(t.savedSettingsMsg, 3000);
+  } else if (msg.type === 'resetSettings') {
+    const config = vscode.workspace.getConfiguration('unifiedUsage');
+    const defaults = {
+      language: 'pt-BR',
+      enableStatusColors: true,
+      refreshIntervalMinutes: 2,
+      warnAtPercent: 75,
+      errorAtPercent: 90,
+      lookbackDays: 90,
+      showSeparateStatusBarItems: false,
+      autoSyncGitHub: true,
+      statusBarShowTokens: false,
+      statusBarModels: ['Gemini', 'Argon', 'Codex', 'Claude'],
+      notifyOnLowQuota: true,
+      chartTheme: 'modern'
+    };
+    for (const [key, val] of Object.entries(defaults)) {
+      await config.update(key, val, vscode.ConfigurationTarget.Global);
+    }
+    scheduleRefresh(context);
+    if (lastData) updateStatusBars(lastData);
+    targetWebview.postMessage({
+      type: 'settingsUpdated',
+      settings: defaults,
+      success: true
+    });
+    vscode.window.setStatusBarMessage(t.savedSettingsMsg, 3000);
   } else if (msg.type === 'setLanguage' && msg.language) {
     await vscode.workspace.getConfiguration('unifiedUsage').update('language', msg.language, vscode.ConfigurationTarget.Global);
     if (lastData) updateStatusBars(lastData);
@@ -579,7 +683,8 @@ async function handleWebviewMessage(context, msg, targetWebview) {
         data: lastData,
         activeTab: pendingActiveTab,
         forceTab: false,
-        language: getConfig().language
+        language: getConfig().language,
+        settings: getConfig()
       });
     } else {
       await refreshUsage(context, false);
@@ -593,7 +698,7 @@ async function handleWebviewMessage(context, msg, targetWebview) {
   } else if (msg.type === 'openAnalytics') {
     openUnifiedPanel(context, 'analytics', true);
   } else if (msg.type === 'openSettings') {
-    vscode.commands.executeCommand('unifiedUsage.openSettings');
+    openUnifiedPanel(context, 'settings', true);
   } else if (msg.type === 'syncNow') {
     vscode.commands.executeCommand('unifiedUsage.syncNow');
   } else if (msg.type === 'pushSync') {
@@ -604,6 +709,10 @@ async function handleWebviewMessage(context, msg, targetWebview) {
     const history = context.globalState.get('agQuotaHistoryV2', []).filter((e) => e.category !== msg.category);
     await context.globalState.update('agQuotaHistoryV2', history);
     await refreshUsage(context, false);
+  } else if (msg.type === 'clearAllHistory') {
+    await context.globalState.update('agQuotaHistoryV2', []);
+    await refreshUsage(context, false);
+    vscode.window.showInformationMessage('Histórico de quotas limpo com sucesso.');
   } else if (msg.type === 'saveCSV' && msg.data) {
     const uri = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file('ai_usage_analytics.csv'),
@@ -655,7 +764,8 @@ async function refreshUsage(context, showNotification = false) {
         data,
         activeTab: pendingActiveTab,
         forceTab: false,
-        language: cfg.language
+        language: cfg.language,
+        settings: cfg
       });
     }
     if (showNotification) {
@@ -680,7 +790,8 @@ function openUnifiedPanel(context, defaultTab = null, forceTab = false) {
         data: lastData,
         activeTab: pendingActiveTab,
         forceTab: !!forceTab,
-        language: getConfig().language
+        language: getConfig().language,
+        settings: getConfig()
       });
     }
     return;
@@ -753,7 +864,7 @@ async function showQuickMenu(context) {
     {
       label: t.qmSettings,
       description: t.qmSettingsSub,
-      action: () => vscode.commands.executeCommand('unifiedUsage.openSettings')
+      action: () => openUnifiedPanel(context, 'settings', true)
     }
   ];
 
@@ -789,9 +900,7 @@ function activate(context) {
     vscode.commands.registerCommand('unifiedUsage.openMissionControl', () => openUnifiedPanel(context, 'mission', true)),
     vscode.commands.registerCommand('unifiedUsage.openAnalytics', () => openUnifiedPanel(context, 'analytics', true)),
     vscode.commands.registerCommand('unifiedUsage.openModelsSettings', () => openUnifiedPanel(context, 'ag-dashboard', true)),
-    vscode.commands.registerCommand('unifiedUsage.openSettings', () =>
-      vscode.commands.executeCommand('workbench.action.openSettings', 'unifiedUsage')
-    ),
+    vscode.commands.registerCommand('unifiedUsage.openSettings', () => openUnifiedPanel(context, 'settings', true)),
     vscode.commands.registerCommand('unifiedUsage.quickMenu', () => showQuickMenu(context)),
     vscode.commands.registerCommand('unifiedUsage.refresh', () => refreshUsage(context, true)),
     vscode.commands.registerCommand('unifiedUsage.syncNow', () => pullAndApplyUpdates(vscode, { silent: false })),

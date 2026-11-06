@@ -18,16 +18,7 @@
     --success: #4ade80;
     --warning: #facc15;
     --error: #f87171;
-    --progress-0: #b91c1c;
-    --progress-20: #ef4444;
-    --progress-40: #eab308;
-    --progress-60: #fde047;
-    --progress-80: #16a34a;
-    --progress-100: #4ade80;
-    --models-gemini: #1d8aad;
-    --models-argon: #4b6bcb;
-    --models-codex: #10b981;
-    --models-claude: #d97706;
+    --accent: #38bdf8;
     --radius-sm: 8px;
     --radius-lg: 12px;
   }
@@ -175,7 +166,7 @@
     position: relative;
   }
 
-  /* 1. Service Health Box */
+  /* Service Health Box */
   .public-status-link {
     display: flex;
     align-items: center;
@@ -227,7 +218,7 @@
   .h-warn { background: #f59e0b; }
   .h-down { background: #ef4444; }
 
-  /* 2. Sparkline Trend Card */
+  /* Sparkline Trend Card */
   .spark-cat-pills {
     display: inline-flex;
     gap: 4px;
@@ -300,7 +291,7 @@
     font-size: 11px;
   }
 
-  /* 3. Usage Activity Heatmap */
+  /* Usage Activity Heatmap */
   .heatmap-nav {
     display: flex;
     align-items: center;
@@ -605,13 +596,17 @@
     border-radius: 10px;
     padding: 12px 14px;
   }
-  select, input[type="date"] {
+  select, input[type="date"], input[type="text"] {
     background: #141418;
     color: var(--text-primary);
     border: 1px solid var(--card-border);
     border-radius: 6px;
-    padding: 5px 8px;
+    padding: 6px 10px;
     font-size: 12px;
+    outline: none;
+  }
+  select:focus, input[type="text"]:focus {
+    border-color: #4ade80;
   }
   .chart-box {
     background: #202025;
@@ -620,6 +615,255 @@
     padding: 16px;
     height: 390px;
     position: relative;
+  }
+
+  /* ================= SETTINGS TAB STYLES ================= */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 16px;
+  }
+  .settings-card {
+    background: #202025;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .settings-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 10px;
+  }
+  .settings-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-primary);
+  }
+  .settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 0;
+  }
+  .settings-label-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  .settings-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .settings-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.35;
+  }
+
+  /* Toggle Switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-round {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #33333b;
+    transition: .2s; border-radius: 24px;
+  }
+  .slider-round:before {
+    position: absolute; content: "";
+    height: 18px; width: 18px; left: 3px; bottom: 3px;
+    background-color: #ffffff;
+    transition: .2s; border-radius: 50%;
+  }
+  input:checked + .slider-round { background-color: #4ade80; }
+  input:checked + .slider-round:before { transform: translateX(20px); }
+
+  /* Range Slider */
+  .range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 6px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #33333b;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4ade80;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+  .range-val {
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--vscode-editor-font-family, monospace);
+    color: #4ade80;
+    min-width: 45px;
+    text-align: right;
+  }
+
+  /* Chip Checkboxes */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .chip-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #17171b;
+    border: 1px solid var(--card-border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .chip-item input[type="checkbox"] {
+    accent-color: #4ade80;
+    cursor: pointer;
+  }
+  .chip-item:hover {
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.2);
+  }
+  .chip-item.active {
+    background: rgba(74, 222, 128, 0.12);
+    border-color: rgba(74, 222, 128, 0.4);
+    color: #4ade80;
+  }
+
+  /* Save Action Bar */
+  .action-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: #18181c;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+  }
+  .btn-primary {
+    background: #22c55e;
+    color: #052e16;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn-primary:hover {
+    background: #4ade80;
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: #202025;
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.25);
+  }
+  .btn-danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.22);
+    border-color: rgba(239, 68, 68, 0.6);
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #15803d;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+    display: none;
+    z-index: 999;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Roadmap Idea Cards */
+  .roadmap-card {
+    background: #17171b;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .roadmap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .badge-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
   }
 </style>
 </head>
@@ -634,18 +878,18 @@
       <button class="nav-btn active" id="tabBtnAg" onclick="switchTab('ag-dashboard')">🚀 Painel AG Usage</button>
       <button class="nav-btn" id="tabBtnMission" onclick="switchTab('mission')">⚡ Controle de Tokens</button>
       <button class="nav-btn" id="tabBtnAnalytics" onclick="switchTab('analytics')">📊 Gráficos e Exportação</button>
+      <button class="nav-btn" id="tabBtnSettings" onclick="switchTab('settings')">⚙ Configurações</button>
       <button class="nav-btn" id="btnSync" onclick="post('syncNow')" title="Baixar atualizações do GitHub">☁ Sincronizar</button>
       <button class="nav-btn" id="btnPush" onclick="post('pushSync')" title="Enviar alterações locais para o GitHub">⬆ Enviar</button>
       <button class="nav-btn" id="btnRefresh" onclick="post('refresh')">↻ Atualizar</button>
       <button class="nav-btn lang-btn" id="langSwitchBtn" onclick="toggleLanguage()" title="Mudar Idioma / Switch Language">🌐 PT</button>
-      <button class="nav-btn" onclick="post('openSettings')">⚙</button>
     </div>
   </div>
 
   <!-- ==================== TAB 1: PAINEL AG USAGE ==================== -->
   <div class="view-pane active" id="paneAgDashboard">
 
-    <!-- 3 Colunas Hero Showcase (SAÚDE DOS SERVIÇOS | SPARKLINE | MAPA DE ATIVIDADE) -->
+    <!-- 3 Colunas Hero Showcase -->
     <div class="ag-showcase-container">
 
       <!-- Coluna 1: SAÚDE DOS SERVIÇOS -->
@@ -668,7 +912,7 @@
         </div>
       </div>
 
-      <!-- Coluna 2: GEMINI / ARGON / CODEX / CLAUDE SPARKLINE -->
+      <!-- Coluna 2: SPARKLINE -->
       <div class="showcase-card">
         <div class="showcase-header">
           <span class="showcase-title" id="sparkCardTitle">GEMINI</span>
@@ -791,6 +1035,263 @@
     </div>
   </div>
 
+  <!-- ==================== TAB 4: CONFIGURAÇÕES & PERSONALIZAÇÃO ==================== -->
+  <div class="view-pane" id="paneSettings">
+
+    <!-- Top Action Bar -->
+    <div class="action-bar">
+      <div style="margin-right:auto;">
+        <span class="showcase-title" id="lblSettingsTitle">PAINEL DE CONFIGURAÇÕES & PERSONALIZAÇÃO</span>
+        <div style="font-size:11px;color:#9ca3af;" id="lblSettingsSub">Ajuste as preferências da extensão sem precisar editar arquivos JSON.</div>
+      </div>
+      <button class="btn-secondary" onclick="resetSettingsDefaults()" id="btnResetDefaults">Restaurar Padrões</button>
+      <button class="btn-primary" onclick="saveSettingsFromForm()" id="btnSaveSettings">💾 Salvar Alterações</button>
+    </div>
+
+    <div class="settings-grid">
+
+      <!-- CARD 1: Barra de Status do VS Code -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <span>🚀</span>
+          <span class="settings-card-title" id="cardTitleStatusBar">Barra de Status do VS Code</span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgLayout">Layout dos Itens</span>
+            <span class="settings-desc" id="lblCfgLayoutDesc">Escolha entre um item único ou separar em dois.</span>
+          </div>
+          <div class="seg-group">
+            <button class="seg-btn active" id="btnLayoutUnified" onclick="setLayoutChoice(false)">Unificado</button>
+            <button class="seg-btn" id="btnLayoutSplit" onclick="setLayoutChoice(true)">Separado</button>
+          </div>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgModels">Modelos Visíveis na Barra de Status</span>
+            <span class="settings-desc" id="lblCfgModelsDesc">Desmarque modelos que você não quer monitorar na barra inferior.</span>
+          </div>
+          <div class="chip-group">
+            <label class="chip-item active" id="chipGemini"><input type="checkbox" id="cfgMdlGemini" checked onchange="toggleChip('chipGemini')"> Gemini</label>
+            <label class="chip-item active" id="chipArgon"><input type="checkbox" id="cfgMdlArgon" checked onchange="toggleChip('chipArgon')"> Argon</label>
+            <label class="chip-item active" id="chipCodex"><input type="checkbox" id="cfgMdlCodex" checked onchange="toggleChip('chipCodex')"> Codex</label>
+            <label class="chip-item active" id="chipClaude"><input type="checkbox" id="cfgMdlClaude" checked onchange="toggleChip('chipClaude')"> Claude</label>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgShowTokens">Exibir Total de Tokens</span>
+            <span class="settings-desc" id="lblCfgShowTokensDesc">Inclui a contagem total de tokens consumidos no final da barra.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cfgShowTokens">
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- CARD 2: Cores e Alertas de Cota -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <span>🎨</span>
+          <span class="settings-card-title" id="cardTitleColors">Cores e Alertas de Consumo</span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgStatusColors">Coloração de Alerta na Barra</span>
+            <span class="settings-desc" id="lblCfgStatusColorsDesc">Muda a cor da barra de status para amarelo ou vermelho conforme o consumo. Desative se preferir que nunca mude de cor.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cfgEnableColors" checked>
+            <span class="slider-round"></span>
+          </label>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;">
+          <div class="settings-label-wrap" style="width:100%;">
+            <div style="display:flex;justify-content:space-between;">
+              <span class="settings-label" id="lblCfgWarn">Limite de Aviso (Amarelo)</span>
+              <span class="range-val" id="valWarn">75%</span>
+            </div>
+            <span class="settings-desc" id="lblCfgWarnDesc">Aplica amarelo quando a cota usada atingir essa porcentagem.</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="rangeWarn" min="10" max="95" value="75" oninput="document.getElementById('valWarn').textContent = this.value + '%'">
+          </div>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;">
+          <div class="settings-label-wrap" style="width:100%;">
+            <div style="display:flex;justify-content:space-between;">
+              <span class="settings-label" id="lblCfgError">Limite de Esgotamento (Vermelho)</span>
+              <span class="range-val" id="valError" style="color:#ef4444;">90%</span>
+            </div>
+            <span class="settings-desc" id="lblCfgErrorDesc">Aplica vermelho quando a cota usada atingir essa porcentagem.</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="rangeError" min="50" max="100" value="90" oninput="document.getElementById('valError').textContent = this.value + '%'">
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgNotifyLow">Notificação de Cota Baixa (&lt;15%)</span>
+            <span class="settings-desc" id="lblCfgNotifyLowDesc">Exibe um aviso discreto no VS Code quando a cota estiver perto de acabar.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cfgNotifyLow" checked>
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- CARD 3: Atualização & Sincronização -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <span>⏱</span>
+          <span class="settings-card-title" id="cardTitleTiming">Atualização & Sincronização</span>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;">
+          <div class="settings-label-wrap" style="width:100%;">
+            <div style="display:flex;justify-content:space-between;">
+              <span class="settings-label" id="lblCfgInterval">Intervalo de Atualização</span>
+              <span class="range-val" id="valInterval">2 min</span>
+            </div>
+            <span class="settings-desc" id="lblCfgIntervalDesc">Frequência em que os logs e cotas são lidos em segundo plano.</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="rangeInterval" min="1" max="60" value="2" oninput="document.getElementById('valInterval').textContent = this.value + ' min'">
+          </div>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;">
+          <div class="settings-label-wrap" style="width:100%;">
+            <div style="display:flex;justify-content:space-between;">
+              <span class="settings-label" id="lblCfgLookback">Histórico Retroativo de Logs</span>
+              <span class="range-val" id="valLookback">90 dias</span>
+            </div>
+            <span class="settings-desc" id="lblCfgLookbackDesc">Ignorar sessões mais antigas que este período ao calcular totais.</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="rangeLookback" min="7" max="365" value="90" oninput="document.getElementById('valLookback').textContent = this.value + ' dias'">
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgAutoSync">Sincronização com GitHub</span>
+            <span class="settings-desc" id="lblCfgAutoSyncDesc">Sincroniza atalhos e configurações da extensão entre seus computadores.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cfgAutoSync" checked>
+            <span class="slider-round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- CARD 4: Personalização & Manutenção -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <span>🛠</span>
+          <span class="settings-card-title" id="cardTitleMaintenance">Manutenção & Dados</span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgTheme">Tema Visual dos Gráficos</span>
+            <span class="settings-desc" id="lblCfgThemeDesc">Paleta de cores utilizada para desenhar os gráficos.</span>
+          </div>
+          <select id="cfgChartTheme" onchange="applyChartThemePreview()">
+            <option value="modern">Moderno (Esmeralda/Ciano)</option>
+            <option value="cyberpunk">Cyberpunk (Neon Pink/Amarelo)</option>
+            <option value="classic">Clássico (VS Code Blue)</option>
+            <option value="minimal">Minimalista (Escala de Cinza)</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgClearHistory">Histórico de Quotas</span>
+            <span class="settings-desc" id="lblCfgClearHistoryDesc">Limpa os registros armazenados para o gráfico de sparklines.</span>
+          </div>
+          <button class="btn-danger" onclick="clearSparklineHistory()" id="btnClearSparkHistory">Limpar Histórico</button>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label-wrap">
+            <span class="settings-label" id="lblCfgExportDiag">Exportar Diagnóstico Completo</span>
+            <span class="settings-desc" id="lblCfgExportDiagDesc">Gera um arquivo JSON com todas as estatísticas para inspeção.</span>
+          </div>
+          <button class="btn-secondary" onclick="post('exportJson')" id="btnExportJsonDiag">📦 Exportar JSON</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CARD 5: Sugestões & Roadmap Interativo -->
+    <div class="showcase-card" style="min-height:auto;margin-top:4px;">
+      <div class="showcase-header">
+        <span class="showcase-title">💡 SUGESTÕES & PRÓXIMAS IMPLEMENTAÇÕES RECOMENDADAS</span>
+        <span class="badge-tag">Roadmap</span>
+      </div>
+      <div style="font-size:12px;color:#9ca3af;margin-bottom:12px;" id="lblRoadmapDesc">
+        Ideias inteligentes pensadas para elevar o monitoramento de IA da sua extensão para o próximo nível:
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:12px;">
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <strong style="color:#4ade80;">1. Previsão de Esgotamento por IA</strong>
+            <span class="badge-tag">Em Análise</span>
+          </div>
+          <span style="font-size:11px;color:#9ca3af;">
+            Calcula automaticamente o ritmo de consumo nas últimas horas e projeta exatamente em quantos minutos ou dias a cota atual vai esgotar.
+          </span>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <strong style="color:#38bdf8;">2. Calculadora de Custo Real ($ / R$)</strong>
+            <span class="badge-tag">Sugerido</span>
+          </div>
+          <span style="font-size:11px;color:#9ca3af;">
+            Converte tokens usados para a tabela oficial de preços de OpenAI e Anthropic, mostrando quanto você economizou no mês com os planos Pro.
+          </span>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <strong style="color:#fbbf24;">3. Alertas em Webhook / Discord / Telegram</strong>
+            <span class="badge-tag">Sugerido</span>
+          </div>
+          <span style="font-size:11px;color:#9ca3af;">
+            Dispara um alerta silencioso no seu celular ou canal do Discord quando a cota estiver perto de 0% ou quando o reset semanal ocorrer.
+          </span>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <strong style="color:#a78bfa;">4. Suporte a Modelos Locais (Ollama / LM Studio)</strong>
+            <span class="badge-tag">Futuro</span>
+          </div>
+          <span style="font-size:11px;color:#9ca3af;">
+            Monitora a velocidade de inferência (tokens/segundo) e uso de memória VRAM da GPU para modelos rodando na sua própria máquina.
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div id="settingsToast" class="toast">Configurações salvas com sucesso!</div>
+
 <script>
   const vscode = acquireVsCodeApi();
   let currentData = null;
@@ -801,6 +1302,7 @@
   let hmYear = new Date().getFullYear();
   let analyticsMode = 'model';
   let chartInstance = null;
+  let cachedSettings = {};
 
   const I18N = {
     'pt-BR': {
@@ -808,6 +1310,7 @@
       tabAg: '🚀 Painel AG Usage',
       tabTokens: '⚡ Controle de Tokens',
       tabAnalytics: '📊 Gráficos e Exportação',
+      tabSettings: '⚙ Configurações',
       sync: '☁ Sincronizar',
       syncTitle: 'Baixar atualizações do GitHub',
       push: '⬆ Enviar',
@@ -880,13 +1383,19 @@
       valueCol: 'Valor',
       totalTokens: 'Total de Tokens',
       totalWorkspaceTokens: 'Total de Tokens por Workspace',
-      langBtn: '🌐 PT'
+      langBtn: '🌐 PT',
+      savedToast: 'Configurações salvas com sucesso!',
+      settingsTitle: 'PAINEL DE CONFIGURAÇÕES & PERSONALIZAÇÃO',
+      settingsSub: 'Ajuste as preferências da extensão sem precisar editar arquivos JSON.',
+      btnSave: '💾 Salvar Alterações',
+      btnReset: 'Restaurar Padrões'
     },
     'en': {
       title: '🚀 AG Usage & Unified AI Monitor',
       tabAg: '🚀 AG Usage Dashboard',
       tabTokens: '⚡ Token Control',
       tabAnalytics: '📊 Charts & Export',
+      tabSettings: '⚙ Settings',
       sync: '☁ Sync',
       syncTitle: 'Pull latest updates from GitHub',
       push: '⬆ Push',
@@ -959,7 +1468,12 @@
       valueCol: 'Value',
       totalTokens: 'Total Tokens',
       totalWorkspaceTokens: 'Total Workspace Tokens',
-      langBtn: '🌐 EN'
+      langBtn: '🌐 EN',
+      savedToast: 'Settings saved successfully!',
+      settingsTitle: 'SETTINGS & CUSTOMIZATION DASHBOARD',
+      settingsSub: 'Customize extension behavior and visuals without editing JSON.',
+      btnSave: '💾 Save Changes',
+      btnReset: 'Reset to Defaults'
     }
   };
 
@@ -967,6 +1481,7 @@
   let currentTab = previousState.currentTab || 'ag-dashboard';
   let currentLang = previousState.currentLang || 'pt-BR';
   let hasInitializedTab = false;
+  let layoutChoiceSplit = false;
 
   function t() {
     return I18N[currentLang] || I18N['pt-BR'];
@@ -979,6 +1494,7 @@
     document.getElementById('tabBtnAg').textContent = tr.tabAg;
     document.getElementById('tabBtnMission').textContent = tr.tabTokens;
     document.getElementById('tabBtnAnalytics').textContent = tr.tabAnalytics;
+    document.getElementById('tabBtnSettings').textContent = tr.tabSettings;
     document.getElementById('btnSync').textContent = tr.sync;
     document.getElementById('btnSync').title = tr.syncTitle;
     document.getElementById('btnPush').textContent = tr.push;
@@ -1015,6 +1531,11 @@
     document.getElementById('btnResetDates').textContent = tr.resetDatesBtn;
     document.getElementById('lblDetailedBreakdown').textContent = tr.detailedBreakdown;
 
+    document.getElementById('lblSettingsTitle').textContent = tr.settingsTitle;
+    document.getElementById('lblSettingsSub').textContent = tr.settingsSub;
+    document.getElementById('btnSaveSettings').textContent = tr.btnSave;
+    document.getElementById('btnResetDefaults').textContent = tr.btnReset;
+
     if (currentData) {
       renderAgDashboard();
       renderMissionControl();
@@ -1027,6 +1548,13 @@
     vscode.setState({ ...vscode.getState(), currentLang, currentTab });
     post('setLanguage', { language: currentLang });
     applyLanguage();
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById('settingsToast');
+    el.textContent = msg || t().savedToast;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 2500);
   }
 
   function post(type, extra = {}) {
@@ -1077,12 +1605,18 @@
     document.getElementById('tabBtnAg').classList.toggle('active', tab === 'ag-dashboard');
     document.getElementById('tabBtnMission').classList.toggle('active', tab === 'mission');
     document.getElementById('tabBtnAnalytics').classList.toggle('active', tab === 'analytics');
+    document.getElementById('tabBtnSettings').classList.toggle('active', tab === 'settings');
+
     document.getElementById('paneAgDashboard').classList.toggle('active', tab === 'ag-dashboard');
     document.getElementById('paneMission').classList.toggle('active', tab === 'mission');
     document.getElementById('paneAnalytics').classList.toggle('active', tab === 'analytics');
+    document.getElementById('paneSettings').classList.toggle('active', tab === 'settings');
 
     if (tab === 'analytics' && currentData) {
       setTimeout(() => renderAnalytics(), 50);
+    }
+    if (tab === 'settings') {
+      post('getSettings');
     }
 
     if (notifyHost) {
@@ -1613,6 +2147,19 @@
     return buckets.filter(r => r[0] >= startTs && r[0] <= endTs);
   }
 
+  function getThemePalette(themeName) {
+    if (themeName === 'cyberpunk') {
+      return ['#f43f5e', '#06b6d4', '#eab308', '#ec4899', '#8b5cf6', '#10b981'];
+    }
+    if (themeName === 'classic') {
+      return ['#2563eb', '#f97316', '#16a34a', '#9333ea', '#0284c7', '#dc2626'];
+    }
+    if (themeName === 'minimal') {
+      return ['#9ca3af', '#d1d5db', '#6b7280', '#e5e7eb', '#4b5563', '#374151'];
+    }
+    return ['#4ade80', '#38bdf8', '#818cf8', '#fbbf24', '#f87171', '#a78bfa'];
+  }
+
   function renderAnalytics() {
     if (!currentData) return;
     const tr = t();
@@ -1651,7 +2198,8 @@
       <div class="tile"><div class="tile-label">${tr.totalTurns}</div><div class="tile-value" style="color:#facc15">${totalTurns.toLocaleString()}</div></div>
     `;
 
-    const palette = ['#4ade80', '#38bdf8', '#818cf8', '#fbbf24', '#f87171', '#a78bfa'];
+    const themeName = cachedSettings.chartTheme || document.getElementById('cfgChartTheme')?.value || 'modern';
+    const palette = getThemePalette(themeName);
     const canvas = document.getElementById('analyticsCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1664,15 +2212,15 @@
       datasets = chartType === 'doughnut'
         ? [{ label: tr.totalTokens, data: entries.map(e => e[1].total), backgroundColor: palette }]
         : [
-            { label: tr.inputCacheTokens, data: entries.map(e => e[1].input), backgroundColor: '#38bdf8' },
-            { label: tr.outputTokens, data: entries.map(e => e[1].output), backgroundColor: '#4ade80' }
+            { label: tr.inputCacheTokens, data: entries.map(e => e[1].input), backgroundColor: palette[1] || '#38bdf8' },
+            { label: tr.outputTokens, data: entries.map(e => e[1].output), backgroundColor: palette[0] || '#4ade80' }
           ];
       tableHtml = `<table><thead><tr><th>${tr.modelCol}</th><th class="num">${tr.turns}</th><th class="num">${tr.inputCacheCol}</th><th class="num">${tr.outputCol}</th><th class="num">${tr.totalCol}</th></tr></thead><tbody>` +
         entries.map(([k, v]) => `<tr><td class="mono">${k}</td><td class="num">${v.reqs}</td><td class="num">${v.input.toLocaleString()}</td><td class="num">${v.output.toLocaleString()}</td><td class="num"><strong>${v.total.toLocaleString()}</strong></td></tr>`).join('') +
         `</tbody></table>`;
     } else if (analyticsMode === 'token') {
       labels = [tr.inputCacheTokens, tr.outputTokens, tr.combinedTotal];
-      datasets = [{ label: 'Tokens', data: [totalIn, totalOut, totalIn + totalOut], backgroundColor: ['#38bdf8', '#4ade80', '#818cf8'] }];
+      datasets = [{ label: 'Tokens', data: [totalIn, totalOut, totalIn + totalOut], backgroundColor: [palette[1], palette[0], palette[2]] }];
       tableHtml = `<table><thead><tr><th>${tr.metricCol}</th><th class="num">${tr.valueCol}</th></tr></thead><tbody>
         <tr><td>${tr.inputCacheTokens}</td><td class="num">${totalIn.toLocaleString()}</td></tr>
         <tr><td>${tr.outputTokens}</td><td class="num">${totalOut.toLocaleString()}</td></tr>
@@ -1718,12 +2266,101 @@
     post('saveCSV', { data: lines.join('\n') });
   }
 
+  /* ================= 4. CONFIGURAÇÕES INTERATIVAS ================= */
+  function setLayoutChoice(isSplit) {
+    layoutChoiceSplit = isSplit;
+    document.getElementById('btnLayoutUnified').classList.toggle('active', !isSplit);
+    document.getElementById('btnLayoutSplit').classList.toggle('active', isSplit);
+  }
+
+  function toggleChip(chipId) {
+    const chip = document.getElementById(chipId);
+    const cb = chip.querySelector('input[type="checkbox"]');
+    chip.classList.toggle('active', cb.checked);
+  }
+
+  function applyChartThemePreview() {
+    cachedSettings.chartTheme = document.getElementById('cfgChartTheme').value;
+    if (currentTab === 'analytics') renderAnalytics();
+  }
+
+  function populateSettingsForm(cfg) {
+    cachedSettings = { ...cfg };
+    layoutChoiceSplit = !!cfg.showSeparateStatusBarItems;
+    setLayoutChoice(layoutChoiceSplit);
+
+    const models = Array.isArray(cfg.statusBarModels) ? cfg.statusBarModels : ['Gemini', 'Argon', 'Codex', 'Claude'];
+    document.getElementById('cfgMdlGemini').checked = models.includes('Gemini');
+    document.getElementById('cfgMdlArgon').checked = models.includes('Argon');
+    document.getElementById('cfgMdlCodex').checked = models.includes('Codex');
+    document.getElementById('cfgMdlClaude').checked = models.includes('Claude');
+    ['chipGemini', 'chipArgon', 'chipCodex', 'chipClaude'].forEach(toggleChip);
+
+    document.getElementById('cfgShowTokens').checked = !!cfg.statusBarShowTokens;
+    document.getElementById('cfgEnableColors').checked = cfg.enableStatusColors !== false;
+    document.getElementById('rangeWarn').value = cfg.warnAtPercent || 75;
+    document.getElementById('valWarn').textContent = (cfg.warnAtPercent || 75) + '%';
+    document.getElementById('rangeError').value = cfg.errorAtPercent || 90;
+    document.getElementById('valError').textContent = (cfg.errorAtPercent || 90) + '%';
+    document.getElementById('cfgNotifyLow').checked = cfg.notifyOnLowQuota !== false;
+
+    document.getElementById('rangeInterval').value = cfg.refreshIntervalMinutes || 2;
+    document.getElementById('valInterval').textContent = (cfg.refreshIntervalMinutes || 2) + ' min';
+    document.getElementById('rangeLookback').value = cfg.lookbackDays || 90;
+    document.getElementById('valLookback').textContent = (cfg.lookbackDays || 90) + ' dias';
+    document.getElementById('cfgAutoSync').checked = cfg.autoSyncGitHub !== false;
+    if (cfg.chartTheme) {
+      document.getElementById('cfgChartTheme').value = cfg.chartTheme;
+    }
+  }
+
+  function saveSettingsFromForm() {
+    const selectedModels = [];
+    if (document.getElementById('cfgMdlGemini').checked) selectedModels.push('Gemini');
+    if (document.getElementById('cfgMdlArgon').checked) selectedModels.push('Argon');
+    if (document.getElementById('cfgMdlCodex').checked) selectedModels.push('Codex');
+    if (document.getElementById('cfgMdlClaude').checked) selectedModels.push('Claude');
+
+    const newSettings = {
+      showSeparateStatusBarItems: layoutChoiceSplit,
+      statusBarModels: selectedModels,
+      statusBarShowTokens: document.getElementById('cfgShowTokens').checked,
+      enableStatusColors: document.getElementById('cfgEnableColors').checked,
+      warnAtPercent: parseInt(document.getElementById('rangeWarn').value, 10),
+      errorAtPercent: parseInt(document.getElementById('rangeError').value, 10),
+      notifyOnLowQuota: document.getElementById('cfgNotifyLow').checked,
+      refreshIntervalMinutes: parseInt(document.getElementById('rangeInterval').value, 10),
+      lookbackDays: parseInt(document.getElementById('rangeLookback').value, 10),
+      autoSyncGitHub: document.getElementById('cfgAutoSync').checked,
+      chartTheme: document.getElementById('cfgChartTheme').value,
+      language: currentLang
+    };
+
+    post('updateSettings', { settings: newSettings });
+    showToast(t().savedToast);
+  }
+
+  function resetSettingsDefaults() {
+    post('resetSettings');
+    showToast('Configurações redefinidas para o padrão.');
+  }
+
+  function clearSparklineHistory() {
+    if (confirm('Tem certeza que deseja limpar todo o histórico de quotas salvo?')) {
+      post('clearAllHistory');
+      showToast('Histórico limpo com sucesso.');
+    }
+  }
+
   window.addEventListener('message', (event) => {
     const msg = event.data;
     if (msg.type === 'usageData') {
       currentData = msg.data;
       if (msg.language && (msg.language === 'en' || msg.language === 'pt-BR')) {
         currentLang = msg.language;
+      }
+      if (msg.settings) {
+        populateSettingsForm(msg.settings);
       }
       if (msg.isSidebar) {
         document.body.classList.add('is-sidebar');
@@ -1738,11 +2375,16 @@
       } else {
         switchTab(currentTab, false);
       }
+    } else if (msg.type === 'settingsData') {
+      if (msg.settings) populateSettingsForm(msg.settings);
+    } else if (msg.type === 'settingsUpdated') {
+      if (msg.settings) populateSettingsForm(msg.settings);
     }
   });
 
   applyLanguage();
   post('ready');
+  post('getSettings');
 </script>
 </body>
 </html>
